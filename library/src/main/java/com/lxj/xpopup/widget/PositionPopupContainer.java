@@ -52,24 +52,24 @@ public class PositionPopupContainer extends FrameLayout {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getPointerCount() > 1 || !enableDrag) return super.dispatchTouchEvent(ev);
         try {
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    touchX = ev.getX();
-                    touchY = ev.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float dx = ev.getX() - touchX;
-                    float dy = ev.getY() - touchY;
-                    canIntercept = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) > touchSlop;
-                    touchX = ev.getX();
-                    touchY = ev.getY();
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    touchX = 0;
-                    touchY = 0;
-                    break;
+            int action = ev.getAction();
+
+            if (action == MotionEvent.ACTION_DOWN) {
+                touchX = ev.getX();
+                touchY = ev.getY();
+
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                float dx = ev.getX() - touchX;
+                float dy = ev.getY() - touchY;
+                canIntercept = Math.sqrt(dx * dx + dy * dy) > touchSlop;
+                touchX = ev.getX();
+                touchY = ev.getY();
+
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                touchX = 0;
+                touchY = 0;
             }
+
         }catch (Exception e){ }
         return super.dispatchTouchEvent(ev);
     }

@@ -365,8 +365,9 @@ public class XPopupUtils {
         for (int i = 0, count = decorView.getChildCount(); i < count; i++) {
             final View child = decorView.getChildAt(i);
             final int id = child.getId();
-            if (id != View.NO_ID) {
+            if (id != View.NO_ID&&(id >>> 24) != 0) {
                 try {
+
                     String resourceEntryName = window.getContext().getResources().getResourceEntryName(id);
                     if ("navigationBarBackground".equals(resourceEntryName)
                             && child.getVisibility() == View.VISIBLE) {
@@ -744,16 +745,16 @@ public class XPopupUtils {
                     ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_NORMAL
             );
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    return 90;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    return 180;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    return 270;
-                default:
-                    return 0;
+            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                return 90;
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                return 180;
+            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                return 270;
+            } else {
+                return 0;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

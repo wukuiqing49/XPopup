@@ -31,10 +31,10 @@ public final class PermissionConstants {
 
     public static String[] getPermissions(@PermissionGroup final String permission) {
         if (permission == null) return new String[0];
-        switch (permission) {
-            case STORAGE:
-                return GROUP_STORAGE;
+        if (permission==STORAGE){
+            return GROUP_STORAGE;
         }
+
         return new String[]{permission};
     }
 }

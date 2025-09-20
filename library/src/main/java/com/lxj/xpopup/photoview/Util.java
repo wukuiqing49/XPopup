@@ -1,5 +1,7 @@
 package com.lxj.xpopup.photoview;
 
+import static android.widget.ImageView.ScaleType.MATRIX;
+
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -24,11 +26,11 @@ class Util {
         if (scaleType == null) {
             return false;
         }
-        switch (scaleType) {
-            case MATRIX:
-//                throw new IllegalStateException("Matrix scale type is not supported");
-                return false;
+        if (scaleType == MATRIX) {
+            // throw new IllegalStateException("Matrix scale type is not supported");
+            return false;
         }
+
         return true;
     }
 

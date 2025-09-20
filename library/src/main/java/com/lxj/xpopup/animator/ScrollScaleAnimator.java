@@ -1,5 +1,14 @@
 package com.lxj.xpopup.animator;
 
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromLeft;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromLeftBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromLeftTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromRight;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromRightBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromRightTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromTop;
+
 import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
@@ -36,65 +45,64 @@ public class ScrollScaleAnimator extends PopupAnimator{
     }
 
     private void applyPivot(){
-        switch (popupAnimation){
-            case ScrollAlphaFromLeft:
-                targetView.setPivotX(0f);
-                targetView.setPivotY(targetView.getMeasuredHeight()/2);
-                startScrollX = targetView.getMeasuredWidth();
-                startScrollY = 0;
-                targetView.setScaleX(startScale);
-                break;
-            case ScrollAlphaFromLeftTop:
-                targetView.setPivotX(0f);
-                targetView.setPivotY(0f);
-                startScrollX =  targetView.getMeasuredWidth();
-                startScrollY =  targetView.getMeasuredHeight();
-                targetView.setScaleX(startScale);
-                targetView.setScaleY(startScale);
-                break;
-            case ScrollAlphaFromTop:
-                targetView.setPivotX(targetView.getMeasuredWidth()/2);
-                targetView.setPivotY(0f);
-                startScrollY =  targetView.getMeasuredHeight();
-                targetView.setScaleY(startScale);
-                break;
-            case ScrollAlphaFromRightTop:
-                targetView.setPivotX(targetView.getMeasuredWidth());
-                targetView.setPivotY(0f);
-                startScrollX =  -targetView.getMeasuredWidth();
-                startScrollY =  targetView.getMeasuredHeight();
-                targetView.setScaleX(startScale);
-                targetView.setScaleY(startScale);
-                break;
-            case ScrollAlphaFromRight:
-                targetView.setPivotX(targetView.getMeasuredWidth());
-                targetView.setPivotY(targetView.getMeasuredHeight()/2);
-                startScrollX =  - targetView.getMeasuredWidth();
-                targetView.setScaleX(startScale);
-                break;
-            case ScrollAlphaFromRightBottom:
-                targetView.setPivotX(targetView.getMeasuredWidth());
-                targetView.setPivotY(targetView.getMeasuredHeight());
-                startScrollX =  -targetView.getMeasuredWidth();
-                startScrollY =  -targetView.getMeasuredHeight();
-                targetView.setScaleX(startScale);
-                targetView.setScaleY(startScale);
-                break;
-            case ScrollAlphaFromBottom:
-                targetView.setPivotX(targetView.getMeasuredWidth()/2);
-                targetView.setPivotY(targetView.getMeasuredHeight());
-                startScrollY =  -targetView.getMeasuredHeight();
-                targetView.setScaleY(startScale);
-                break;
-            case ScrollAlphaFromLeftBottom:
-                targetView.setPivotX(0);
-                targetView.setPivotY(targetView.getMeasuredHeight());
-                startScrollX =  targetView.getMeasuredWidth();
-                startScrollY =  -targetView.getMeasuredHeight();
-                targetView.setScaleX(startScale);
-                targetView.setScaleY(startScale);
-                break;
+        if (popupAnimation == ScrollAlphaFromLeft) {
+            targetView.setPivotX(0f);
+            targetView.setPivotY(targetView.getMeasuredHeight() / 2f);
+            startScrollX = targetView.getMeasuredWidth();
+            startScrollY = 0;
+            targetView.setScaleX(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromLeftTop) {
+            targetView.setPivotX(0f);
+            targetView.setPivotY(0f);
+            startScrollX = targetView.getMeasuredWidth();
+            startScrollY = targetView.getMeasuredHeight();
+            targetView.setScaleX(startScale);
+            targetView.setScaleY(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromTop) {
+            targetView.setPivotX(targetView.getMeasuredWidth() / 2f);
+            targetView.setPivotY(0f);
+            startScrollY = targetView.getMeasuredHeight();
+            targetView.setScaleY(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromRightTop) {
+            targetView.setPivotX(targetView.getMeasuredWidth());
+            targetView.setPivotY(0f);
+            startScrollX = -targetView.getMeasuredWidth();
+            startScrollY = targetView.getMeasuredHeight();
+            targetView.setScaleX(startScale);
+            targetView.setScaleY(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromRight) {
+            targetView.setPivotX(targetView.getMeasuredWidth());
+            targetView.setPivotY(targetView.getMeasuredHeight() / 2f);
+            startScrollX = -targetView.getMeasuredWidth();
+            targetView.setScaleX(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromRightBottom) {
+            targetView.setPivotX(targetView.getMeasuredWidth());
+            targetView.setPivotY(targetView.getMeasuredHeight());
+            startScrollX = -targetView.getMeasuredWidth();
+            startScrollY = -targetView.getMeasuredHeight();
+            targetView.setScaleX(startScale);
+            targetView.setScaleY(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromBottom) {
+            targetView.setPivotX(targetView.getMeasuredWidth() / 2f);
+            targetView.setPivotY(targetView.getMeasuredHeight());
+            startScrollY = -targetView.getMeasuredHeight();
+            targetView.setScaleY(startScale);
+
+        } else if (popupAnimation == ScrollAlphaFromLeftBottom) {
+            targetView.setPivotX(0f);
+            targetView.setPivotY(targetView.getMeasuredHeight());
+            startScrollX = targetView.getMeasuredWidth();
+            startScrollY = -targetView.getMeasuredHeight();
+            targetView.setScaleX(startScale);
+            targetView.setScaleY(startScale);
         }
+
     }
 
     @Override
@@ -121,23 +129,20 @@ public class ScrollScaleAnimator extends PopupAnimator{
     }
 
     private void doScaleAnimation(float fraction){
-        switch (popupAnimation){
-            case ScrollAlphaFromLeft:
-            case ScrollAlphaFromRight:
-                targetView.setScaleX(fraction);
-                break;
-            case ScrollAlphaFromTop:
-            case ScrollAlphaFromBottom:
-                targetView.setScaleY(fraction);
-                break;
-            case ScrollAlphaFromLeftTop:
-            case ScrollAlphaFromLeftBottom:
-            case ScrollAlphaFromRightTop:
-            case ScrollAlphaFromRightBottom:
-                targetView.setScaleX(fraction);
-                targetView.setScaleY(fraction);
-                break;
+        if (popupAnimation == ScrollAlphaFromLeft || popupAnimation == ScrollAlphaFromRight) {
+            targetView.setScaleX(fraction);
+
+        } else if (popupAnimation == ScrollAlphaFromTop || popupAnimation == ScrollAlphaFromBottom) {
+            targetView.setScaleY(fraction);
+
+        } else if (popupAnimation == ScrollAlphaFromLeftTop
+                || popupAnimation == ScrollAlphaFromLeftBottom
+                || popupAnimation == ScrollAlphaFromRightTop
+                || popupAnimation == ScrollAlphaFromRightBottom) {
+            targetView.setScaleX(fraction);
+            targetView.setScaleY(fraction);
         }
+
     }
 
     @Override

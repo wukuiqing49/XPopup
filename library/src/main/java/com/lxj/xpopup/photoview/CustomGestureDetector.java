@@ -111,89 +111,77 @@ class CustomGestureDetector {
 
     private boolean processTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
-        switch (action & MotionEvent.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN:
-                mActivePointerId = ev.getPointerId(0);
 
-                mVelocityTracker = VelocityTracker.obtain();
-                if (null != mVelocityTracker) {
+        int actionMasked = action & MotionEvent.ACTION_MASK;
+
+        if (actionMasked == MotionEvent.ACTION_DOWN) {
+            mActivePointerId = ev.getPointerId(0);
+
+            mVelocityTracker = VelocityTracker.obtain();
+            if (mVelocityTracker != null) {
+                mVelocityTracker.addMovement(ev);
+            }
+
+            mLastTouchX = getActiveX(ev);
+            mLastTouchY = getActiveY(ev);
+            mIsDragging = false;
+
+        } else if (actionMasked == MotionEvent.ACTION_MOVE) {
+            final float x = getActiveX(ev);
+            final float y = getActiveY(ev);
+            final float dx = x - mLastTouchX, dy = y - mLastTouchY;
+
+            if (!mIsDragging) {
+                mIsDragging = Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
+            }
+
+            if (mIsDragging) {
+                mListener.onDrag(dx, dy);
+                mLastTouchX = x;
+                mLastTouchY = y;
+
+                if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(ev);
                 }
+            }
 
+        } else if (actionMasked == MotionEvent.ACTION_CANCEL) {
+            mActivePointerId = INVALID_POINTER_ID;
+            if (mVelocityTracker != null) {
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
+            }
+
+        } else if (actionMasked == MotionEvent.ACTION_UP) {
+            mActivePointerId = INVALID_POINTER_ID;
+            if (mIsDragging && mVelocityTracker != null) {
                 mLastTouchX = getActiveX(ev);
                 mLastTouchY = getActiveY(ev);
-                mIsDragging = false;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                final float x = getActiveX(ev);
-                final float y = getActiveY(ev);
-                final float dx = x - mLastTouchX, dy = y - mLastTouchY;
 
-                if (!mIsDragging) {
-                    // Use Pythagoras to see if drag length is larger than
-                    // touch slop
-                    mIsDragging = Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop;
+                mVelocityTracker.addMovement(ev);
+                mVelocityTracker.computeCurrentVelocity(1000);
+
+                final float vX = mVelocityTracker.getXVelocity();
+                final float vY = mVelocityTracker.getYVelocity();
+
+                if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
+                    mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY);
                 }
+            }
+            if (mVelocityTracker != null) {
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
+            }
 
-                if (mIsDragging) {
-                    mListener.onDrag(dx, dy);
-                    mLastTouchX = x;
-                    mLastTouchY = y;
-
-                    if (null != mVelocityTracker) {
-                        mVelocityTracker.addMovement(ev);
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                mActivePointerId = INVALID_POINTER_ID;
-                // Recycle Velocity Tracker
-                if (null != mVelocityTracker) {
-                    mVelocityTracker.recycle();
-                    mVelocityTracker = null;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                mActivePointerId = INVALID_POINTER_ID;
-                if (mIsDragging) {
-                    if (null != mVelocityTracker) {
-                        mLastTouchX = getActiveX(ev);
-                        mLastTouchY = getActiveY(ev);
-
-                        // Compute velocity within the last 1000ms
-                        mVelocityTracker.addMovement(ev);
-                        mVelocityTracker.computeCurrentVelocity(1000);
-
-                        final float vX = mVelocityTracker.getXVelocity(), vY = mVelocityTracker
-                                .getYVelocity();
-
-                        // If the velocity is greater than minVelocity, call
-                        // listener
-                        if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-                            mListener.onFling(mLastTouchX, mLastTouchY, -vX,
-                                    -vY);
-                        }
-                    }
-                }
-
-                // Recycle Velocity Tracker
-                if (null != mVelocityTracker) {
-                    mVelocityTracker.recycle();
-                    mVelocityTracker = null;
-                }
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                final int pointerIndex = Util.getPointerIndex(ev.getAction());
-                final int pointerId = ev.getPointerId(pointerIndex);
-                if (pointerId == mActivePointerId) {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                    mActivePointerId = ev.getPointerId(newPointerIndex);
-                    mLastTouchX = ev.getX(newPointerIndex);
-                    mLastTouchY = ev.getY(newPointerIndex);
-                }
-                break;
+        } else if (actionMasked == MotionEvent.ACTION_POINTER_UP) {
+            final int pointerIndex = Util.getPointerIndex(ev.getAction());
+            final int pointerId = ev.getPointerId(pointerIndex);
+            if (pointerId == mActivePointerId) {
+                final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                mActivePointerId = ev.getPointerId(newPointerIndex);
+                mLastTouchX = ev.getX(newPointerIndex);
+                mLastTouchY = ev.getY(newPointerIndex);
+            }
         }
 
         mActivePointerIndex = ev

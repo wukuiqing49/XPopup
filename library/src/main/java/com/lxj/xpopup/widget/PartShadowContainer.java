@@ -47,44 +47,41 @@ public class PartShadowContainer extends FrameLayout {
         Rect implViewRect = new Rect(location[0], location[1], location[0] + implView.getMeasuredWidth(),
                 location[1] + implView.getMeasuredHeight());
         if (!XPopupUtils.isInRect(event.getRawX(), event.getRawY(), implViewRect)) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    x = event.getX();
-                    y = event.getY();
-                    //TODO: PartShadowContainer需要实现自己的isClickThrough和isTouchThrough
-//                    if(popupView!=null ){
-//                        popupView.passTouchThrough(event);
-//                    }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-//                    if(popupView!=null && popupView.popupInfo != null && popupView.popupInfo.isTouchThrough){
-//                        popupView.passTouchThrough(event);
-//                    }
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    float dx = event.getX() - x;
-                    float dy = event.getY() - y;
-                    float distance = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-                    if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
-                        if (notDismissArea != null && !notDismissArea.isEmpty()) {
-                            boolean inRect = false;
-                            for (Rect r : notDismissArea) {
-                                if (XPopupUtils.isInRect(event.getRawX(), event.getRawY(), r)) {
-                                    inRect = true;
-                                    break;
-                                }
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                x = event.getX();
+                y = event.getY();
+                // TODO: PartShadowContainer需要实现自己的isClickThrough和isTouchThrough
+                // if(popupView != null ){
+                //     popupView.passTouchThrough(event);
+                // }
+            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                // if(popupView != null && popupView.popupInfo != null && popupView.popupInfo.isTouchThrough){
+                //     popupView.passTouchThrough(event);
+                // }
+            } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                float dx = event.getX() - x;
+                float dy = event.getY() - y;
+                float distance = (float) Math.sqrt(dx * dx + dy * dy);
+                if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
+                    if (notDismissArea != null && !notDismissArea.isEmpty()) {
+                        boolean inRect = false;
+                        for (Rect r : notDismissArea) {
+                            if (XPopupUtils.isInRect(event.getRawX(), event.getRawY(), r)) {
+                                inRect = true;
+                                break;
                             }
-                            if (!inRect && listener != null) {
-                                listener.onClickOutside();
-                            }
-                        } else {
-                            if (listener != null) listener.onClickOutside();
                         }
+                        if (!inRect && listener != null) {
+                            listener.onClickOutside();
+                        }
+                    } else {
+                        if (listener != null) listener.onClickOutside();
                     }
-                    x = 0;
-                    y = 0;
-                    break;
+                }
+                x = 0;
+                y = 0;
             }
+
         }
         return true;
     }

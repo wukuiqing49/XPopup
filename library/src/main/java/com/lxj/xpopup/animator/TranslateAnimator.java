@@ -31,35 +31,27 @@ public class TranslateAnimator extends PopupAnimator {
     }
 
     private void applyTranslation() {
-        switch (popupAnimation) {
-            case TranslateFromLeft:
-                targetView.setTranslationX(-targetView.getRight() + targetView.getTranslationX());
-                break;
-            case TranslateFromTop:
-                targetView.setTranslationY(-targetView.getBottom() + targetView.getTranslationY());
-                break;
-            case TranslateFromRight:
-                targetView.setTranslationX(((View) targetView.getParent()).getMeasuredWidth() - targetView.getLeft() + targetView.getTranslationX());
-                break;
-            case TranslateFromBottom:
-                targetView.setTranslationY(((View) targetView.getParent()).getMeasuredHeight() - targetView.getTop() + targetView.getTranslationY());
-                break;
+        if (popupAnimation == PopupAnimation.TranslateFromLeft) {
+            targetView.setTranslationX(-targetView.getRight() + targetView.getTranslationX());
+        } else if (popupAnimation == PopupAnimation.TranslateFromTop) {
+            targetView.setTranslationY(-targetView.getBottom() + targetView.getTranslationY());
+        } else if (popupAnimation == PopupAnimation.TranslateFromRight) {
+            targetView.setTranslationX(((View) targetView.getParent()).getMeasuredWidth() - targetView.getLeft() + targetView.getTranslationX());
+        } else if (popupAnimation == PopupAnimation.TranslateFromBottom) {
+            targetView.setTranslationY(((View) targetView.getParent()).getMeasuredHeight() - targetView.getTop() + targetView.getTranslationY());
         }
+
     }
 
     @Override
     public void animateShow() {
         ViewPropertyAnimator animator = null;
-        switch (popupAnimation) {
-            case TranslateFromLeft:
-            case TranslateFromRight:
-                animator = targetView.animate().translationX(endTranslationX);
-                break;
-            case TranslateFromTop:
-            case TranslateFromBottom:
-                animator = targetView.animate().translationY(endTranslationY);
-                break;
+        if (popupAnimation == PopupAnimation.TranslateFromLeft || popupAnimation == PopupAnimation.TranslateFromRight) {
+            animator = targetView.animate().translationX(endTranslationX);
+        } else if (popupAnimation == PopupAnimation.TranslateFromTop || popupAnimation == PopupAnimation.TranslateFromBottom) {
+            animator = targetView.animate().translationY(endTranslationY);
         }
+
         if (animator != null) animator.setInterpolator(new FastOutSlowInInterpolator())
                 .setDuration(animationDuration)
                 .withLayer()
@@ -71,24 +63,20 @@ public class TranslateAnimator extends PopupAnimator {
     public void animateDismiss() {
         if (animating) return;
         ViewPropertyAnimator animator = null;
-        switch (popupAnimation) {
-            case TranslateFromLeft:
-                startTranslationX = -targetView.getRight();
-                animator = targetView.animate().translationX(startTranslationX);
-                break;
-            case TranslateFromTop:
-                startTranslationY = -targetView.getBottom();
-                animator = targetView.animate().translationY(startTranslationY);
-                break;
-            case TranslateFromRight:
-                startTranslationX = ((View) targetView.getParent()).getMeasuredWidth() - targetView.getLeft();
-                animator = targetView.animate().translationX(startTranslationX);
-                break;
-            case TranslateFromBottom:
-                startTranslationY = ((View) targetView.getParent()).getMeasuredHeight() - targetView.getTop();
-                animator = targetView.animate().translationY(startTranslationY);
-                break;
+        if (popupAnimation == PopupAnimation.TranslateFromLeft) {
+            startTranslationX = -targetView.getRight();
+            animator = targetView.animate().translationX(startTranslationX);
+        } else if (popupAnimation == PopupAnimation.TranslateFromTop) {
+            startTranslationY = -targetView.getBottom();
+            animator = targetView.animate().translationY(startTranslationY);
+        } else if (popupAnimation == PopupAnimation.TranslateFromRight) {
+            startTranslationX = ((View) targetView.getParent()).getMeasuredWidth() - targetView.getLeft();
+            animator = targetView.animate().translationX(startTranslationX);
+        } else if (popupAnimation == PopupAnimation.TranslateFromBottom) {
+            startTranslationY = ((View) targetView.getParent()).getMeasuredHeight() - targetView.getTop();
+            animator = targetView.animate().translationY(startTranslationY);
         }
+
         if (animator != null)
             observerAnimator(animator.setInterpolator(new FastOutSlowInInterpolator())
                     .setDuration((long) (animationDuration * .8))

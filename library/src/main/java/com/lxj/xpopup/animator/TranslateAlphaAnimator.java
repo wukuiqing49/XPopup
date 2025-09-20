@@ -1,5 +1,10 @@
 package com.lxj.xpopup.animator;
 
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromLeft;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromRight;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromTop;
+
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import com.lxj.xpopup.XPopup;
@@ -30,20 +35,16 @@ public class TranslateAlphaAnimator extends PopupAnimator {
     }
 
     private void applyTranslation() {
-        switch (popupAnimation){
-            case TranslateAlphaFromLeft:
-                targetView.setTranslationX(-(targetView.getMeasuredWidth()/* + halfWidthOffset*/));
-                break;
-            case TranslateAlphaFromTop:
-                targetView.setTranslationY(-(targetView.getMeasuredHeight() /*+ halfHeightOffset*/));
-                break;
-            case TranslateAlphaFromRight:
-                targetView.setTranslationX(targetView.getMeasuredWidth() /*+ halfWidthOffset*/);
-                break;
-            case TranslateAlphaFromBottom:
-                targetView.setTranslationY(targetView.getMeasuredHeight() /*+ halfHeightOffset*/);
-                break;
+        if (popupAnimation == TranslateAlphaFromLeft) {
+            targetView.setTranslationX(-targetView.getMeasuredWidth() /* + halfWidthOffset */);
+        } else if (popupAnimation == TranslateAlphaFromTop) {
+            targetView.setTranslationY(-targetView.getMeasuredHeight() /* + halfHeightOffset */);
+        } else if (popupAnimation == TranslateAlphaFromRight) {
+            targetView.setTranslationX(targetView.getMeasuredWidth() /* + halfWidthOffset */);
+        } else if (popupAnimation == TranslateAlphaFromBottom) {
+            targetView.setTranslationY(targetView.getMeasuredHeight() /* + halfHeightOffset */);
         }
+
     }
 
     @Override

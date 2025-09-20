@@ -81,8 +81,10 @@ public class PartShadowDemo extends BaseFragment implements View.OnClickListener
             }
         };
         adapter.setOnItemClickListener(new MultiItemTypeAdapter.SimpleOnItemClickListener(){
+
             @Override
             public void onItemClick(@NonNull View view, @NonNull RecyclerView.ViewHolder holder, int position) {
+
                 toast(data.get(position));
             }
         });
@@ -119,49 +121,43 @@ public class PartShadowDemo extends BaseFragment implements View.OnClickListener
     }
 
     CustomPartShadowPopupView2 popupView2;
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_all:
-            case R.id.tv_price:
-            case R.id.tv_sales:
-                showPartShadow(v);
-                break;
-            case R.id.tv_filter:
-                new XPopup.Builder(getContext())
-                        .isDestroyOnDismiss(true)
-                        .popupPosition(PopupPosition.Right)//右边
-//                        .hasStatusBarShadow(true) //启用状态栏阴影
-                        .asCustom(drawerPopupView)
-                        .show();
-                break;
-            case R.id.tv_select:
-                new XPopup.Builder(getContext())
-                        .atView(v)
-                        .autoOpenSoftInput(true)
-                        .moveUpToKeyboard(false)
-                        .asCustom(new CustomPartShadowPopupView(getContext()))
-                        .show();
-                break;
-            case R.id.tvCenter:
-                new XPopup.Builder(getContext())
-                        .atView(v)
-                        .isViewMode(true)
-                        .popupPosition(PopupPosition.Top)
-                        .asCustom(new CustomPartShadowPopupView2(getContext(), Gravity.START))
-                        .show();
-                break;
-            case R.id.tvCenter2:
-                if(popupView2==null){
-                    popupView2 = new CustomPartShadowPopupView2(getContext(), Gravity.END);
-                }
-                new XPopup.Builder(getContext())
-                        .atView(v)
-                        .isViewMode(true)
-                        .popupPosition(PopupPosition.Bottom)
-                        .asCustom(popupView2)
-                        .show();
-                break;
+        int id = v.getId();
+        if (id == R.id.tv_all || id == R.id.tv_price || id == R.id.tv_sales) {
+            showPartShadow(v);
+        } else if (id == R.id.tv_filter) {
+            new XPopup.Builder(getContext())
+                    .isDestroyOnDismiss(true)
+                    .popupPosition(PopupPosition.Right)
+                    .asCustom(drawerPopupView)
+                    .show();
+        } else if (id == R.id.tv_select) {
+            new XPopup.Builder(getContext())
+                    .atView(v)
+                    .autoOpenSoftInput(true)
+                    .moveUpToKeyboard(false)
+                    .asCustom(new CustomPartShadowPopupView(getContext()))
+                    .show();
+        } else if (id == R.id.tvCenter) {
+            new XPopup.Builder(getContext())
+                    .atView(v)
+                    .isViewMode(true)
+                    .popupPosition(PopupPosition.Top)
+                    .asCustom(new CustomPartShadowPopupView2(getContext(), Gravity.START))
+                    .show();
+        } else if (id == R.id.tvCenter2) {
+            if (popupView2 == null) {
+                popupView2 = new CustomPartShadowPopupView2(getContext(), Gravity.END);
+            }
+            new XPopup.Builder(getContext())
+                    .atView(v)
+                    .isViewMode(true)
+                    .popupPosition(PopupPosition.Bottom)
+                    .asCustom(popupView2)
+                    .show();
         }
     }
+
 }

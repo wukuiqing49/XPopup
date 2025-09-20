@@ -97,50 +97,43 @@ public class SmartDragLayout extends LinearLayout implements NestedScrollingPare
             touchY = 0;
             return true;
         }
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (enableDrag) {
-                    if (tracker != null) tracker.clear();
-                    tracker = VelocityTracker.obtain();
-                }
-                touchX = event.getX();
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (enableDrag) {
+                if (tracker != null) tracker.clear();
+                tracker = VelocityTracker.obtain();
+            }
+            touchX = event.getX();
+            touchY = event.getY();
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (enableDrag && tracker != null) {
+                tracker.addMovement(event);
+                tracker.computeCurrentVelocity(1000);
+                int dy = (int) (event.getY() - touchY);
+                scrollTo(getScrollX(), getScrollY() - dy);
                 touchY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (enableDrag && tracker != null) {
-                    tracker.addMovement(event);
-                    tracker.computeCurrentVelocity(1000);
-                    int dy = (int) (event.getY() - touchY);
-                    scrollTo(getScrollX(), getScrollY() - dy);
-                    touchY = event.getY();
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+            // click in child rect
+            Rect rect = new Rect();
+            child.getGlobalVisibleRect(rect);
+            if (!XPopupUtils.isInRect(event.getRawX(), event.getRawY(), rect) && dismissOnTouchOutside) {
+                float distance = (float) Math.sqrt(Math.pow(event.getX() - touchX, 2) + Math.pow(event.getY() - touchY, 2));
+                if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
+                    performClick();
                 }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                // click in child rect
-                Rect rect = new Rect();
-                child.getGlobalVisibleRect(rect);
-                if (!XPopupUtils.isInRect(event.getRawX(), event.getRawY(), rect) && dismissOnTouchOutside) {
-                    float distance = (float) Math.sqrt(Math.pow(event.getX() - touchX, 2) + Math.pow(event.getY() - touchY, 2));
-                    if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
-                        performClick();
-                    }
+            }
+
+            if (enableDrag && tracker != null) {
+                float yVelocity = tracker.getYVelocity();
+                if (yVelocity > 1500 && !isThreeDrag) {
+                    close();
                 } else {
-
+                    finishScroll();
                 }
-                if (enableDrag && tracker != null) {
-                    float yVelocity = tracker.getYVelocity();
-                    if (yVelocity > 1500 && !isThreeDrag) {
-                        close();
-                    } else {
-                        finishScroll();
-                    }
-//                    tracker.recycle();
-                    tracker = null;
-                }
-
-                break;
+                tracker = null;
+            }
         }
+
         return enableDrag;
     }
 

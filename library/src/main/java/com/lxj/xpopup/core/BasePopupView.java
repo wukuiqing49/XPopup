@@ -1,6 +1,28 @@
 package com.lxj.xpopup.core;
 
 import static com.lxj.xpopup.enums.PopupAnimation.NoAnimation;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromCenter;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromLeftBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromLeftTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromRightBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromRightTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromLeft;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromLeftBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromLeftTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromRight;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromRightBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromRightTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScrollAlphaFromTop;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromLeft;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromRight;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateAlphaFromTop;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateFromBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateFromLeft;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateFromRight;
+import static com.lxj.xpopup.enums.PopupAnimation.TranslateFromTop;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -476,39 +498,39 @@ public abstract class BasePopupView extends FrameLayout implements LifecycleObse
      */
     protected PopupAnimator genAnimatorByPopupType() {
         if (popupInfo == null || popupInfo.popupAnimation == null) return null;
-        switch (popupInfo.popupAnimation) {
-            case ScaleAlphaFromCenter:
-            case ScaleAlphaFromLeftTop:
-            case ScaleAlphaFromRightTop:
-            case ScaleAlphaFromLeftBottom:
-            case ScaleAlphaFromRightBottom:
-                return new ScaleAlphaAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
+        if ((popupInfo.popupAnimation == ScaleAlphaFromCenter)
+                || (popupInfo.popupAnimation == ScaleAlphaFromLeftTop)
+                || (popupInfo.popupAnimation == ScaleAlphaFromRightTop)
+                || (popupInfo.popupAnimation == ScaleAlphaFromLeftBottom)
+                || (popupInfo.popupAnimation == ScaleAlphaFromRightBottom)) {
+            return new ScaleAlphaAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
 
-            case TranslateAlphaFromLeft:
-            case TranslateAlphaFromTop:
-            case TranslateAlphaFromRight:
-            case TranslateAlphaFromBottom:
-                return new TranslateAlphaAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
+        } else if (popupInfo.popupAnimation == TranslateAlphaFromLeft
+                || popupInfo.popupAnimation == TranslateAlphaFromTop
+                || popupInfo.popupAnimation == TranslateAlphaFromRight
+                || popupInfo.popupAnimation == TranslateAlphaFromBottom) {
+            return new TranslateAlphaAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
 
-            case TranslateFromLeft:
-            case TranslateFromTop:
-            case TranslateFromRight:
-            case TranslateFromBottom:
-                return new TranslateAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
+        } else if (popupInfo.popupAnimation == TranslateFromLeft
+                || popupInfo.popupAnimation == TranslateFromTop
+                || popupInfo.popupAnimation == TranslateFromRight
+                || popupInfo.popupAnimation == TranslateFromBottom) {
+            return new TranslateAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
 
-            case ScrollAlphaFromLeft:
-            case ScrollAlphaFromLeftTop:
-            case ScrollAlphaFromTop:
-            case ScrollAlphaFromRightTop:
-            case ScrollAlphaFromRight:
-            case ScrollAlphaFromRightBottom:
-            case ScrollAlphaFromBottom:
-            case ScrollAlphaFromLeftBottom:
-                return new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
+        } else if (popupInfo.popupAnimation == ScrollAlphaFromLeft
+                || popupInfo.popupAnimation == ScrollAlphaFromLeftTop
+                || popupInfo.popupAnimation == ScrollAlphaFromTop
+                || popupInfo.popupAnimation == ScrollAlphaFromRightTop
+                || popupInfo.popupAnimation == ScrollAlphaFromRight
+                || popupInfo.popupAnimation == ScrollAlphaFromRightBottom
+                || popupInfo.popupAnimation == ScrollAlphaFromBottom
+                || popupInfo.popupAnimation == ScrollAlphaFromLeftBottom) {
+            return new ScrollScaleAnimator(getPopupContentView(), getAnimationDuration(), popupInfo.popupAnimation);
 
-            case NoAnimation:
-                return new EmptyAnimator(getPopupContentView(), getAnimationDuration());
+        } else if (popupInfo.popupAnimation == NoAnimation) {
+            return new EmptyAnimator(getPopupContentView(), getAnimationDuration());
         }
+
         return null;
     }
 
@@ -922,36 +944,37 @@ public abstract class BasePopupView extends FrameLayout implements LifecycleObse
         Rect rect = new Rect();
         getPopupImplView().getGlobalVisibleRect(rect);
         if (!XPopupUtils.isInRect(event.getX(), event.getY(), rect)) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    x = event.getX();
-                    y = event.getY();
-                    if(popupInfo!=null && popupInfo.xPopupCallback!=null){
-                        popupInfo.xPopupCallback.onClickOutside(this);
-                    }
-                    passTouchThrough(event);
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if(popupInfo != null){
-                        if(popupInfo.isDismissOnTouchOutside){
-                            checkDismissArea(event);
-                        }
-                        if(popupInfo.isTouchThrough)passTouchThrough(event);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    float dx = event.getX() - x;
-                    float dy = event.getY() - y;
-                    float distance = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-                    passTouchThrough(event);
-                    if (distance < touchSlop && popupInfo != null && popupInfo.isDismissOnTouchOutside) {
+            float dx, dy, distance;
+
+            int action = event.getAction();
+            if (action == MotionEvent.ACTION_DOWN) {
+                x = event.getX();
+                y = event.getY();
+                if (popupInfo != null && popupInfo.xPopupCallback != null) {
+                    popupInfo.xPopupCallback.onClickOutside(this);
+                }
+                passTouchThrough(event);
+
+            } else if (action == MotionEvent.ACTION_MOVE) {
+                if (popupInfo != null) {
+                    if (popupInfo.isDismissOnTouchOutside) {
                         checkDismissArea(event);
                     }
-                    x = 0;
-                    y = 0;
-                    break;
+                    if (popupInfo.isTouchThrough) passTouchThrough(event);
+                }
+
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                dx = event.getX() - x;
+                dy = event.getY() - y;
+                distance = (float) Math.sqrt(dx * dx + dy * dy);
+                passTouchThrough(event);
+                if (distance < touchSlop && popupInfo != null && popupInfo.isDismissOnTouchOutside) {
+                    checkDismissArea(event);
+                }
+                x = 0;
+                y = 0;
             }
+
         }
         return true;
     }

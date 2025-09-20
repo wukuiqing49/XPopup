@@ -15,6 +15,11 @@
  */
 package com.lxj.xpopup.photoview;
 
+import static android.widget.ImageView.ScaleType.FIT_CENTER;
+import static android.widget.ImageView.ScaleType.FIT_END;
+import static android.widget.ImageView.ScaleType.FIT_START;
+import static android.widget.ImageView.ScaleType.FIT_XY;
+
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -97,7 +102,7 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public boolean isVertical, isHorizontal;
     private boolean mZoomEnabled = true;
     private boolean isLongImage = false;//是否是长图
-    private ScaleType mScaleType = ScaleType.FIT_CENTER;
+    private ScaleType mScaleType = FIT_CENTER;
     private OnGestureListener onGestureListener = new OnGestureListener() {
         @Override
         public void onDrag(float dx, float dy) {
@@ -349,54 +354,46 @@ public class PhotoViewAttacher implements View.OnTouchListener,
     public boolean onTouch(View v, MotionEvent ev) {
         boolean handled = false;
         if (mZoomEnabled && Util.hasDrawable((ImageView) v)) {
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    x = ev.getX();
-                    y = ev.getY();
-                    ViewParent parent = v.getParent();
-                    // First, disable the Parent from intercepting the touch
-                    // event
-                    // If we're flinging, and the user presses down, cancel
-                    // fling
-                    cancelFling();
-                    if (parent != null) {
-                        parent.requestDisallowInterceptTouchEvent(true);
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                x = ev.getX();
+                y = ev.getY();
+                ViewParent parent = v.getParent();
+                // First, disable the Parent from intercepting the touch event
+                // If we're flinging, and the user presses down, cancel fling
+                cancelFling();
+                if (parent != null) {
+                    parent.requestDisallowInterceptTouchEvent(true);
+                }
+            } else if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
+                isTopEnd = false;
+                // If the user has zoomed less than min scale, zoom back to min scale
+                if (getScale() < mMinScale) {
+                    RectF rect = getDisplayRect();
+                    if (rect != null) {
+                        v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
+                                rect.centerX(), rect.centerY()));
+                        handled = true;
                     }
-
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_UP:
-                    isTopEnd = false;
-                    // If the user has zoomed less than min scale, zoom back
-                    // to min scale
-                    if (getScale() < mMinScale) {
-                        RectF rect = getDisplayRect();
-                        if (rect != null) {
-                            v.post(new AnimatedZoomRunnable(getScale(), mMinScale,
-                                    rect.centerX(), rect.centerY()));
-                            handled = true;
-                        }
-                    } else if (getScale() > mMaxScale) {
-                        RectF rect = getDisplayRect();
-                        if (rect != null) {
-                            v.post(new AnimatedZoomRunnable(getScale(), mMaxScale,
-                                    rect.centerX(), rect.centerY()));
-                            handled = true;
-                        }
+                } else if (getScale() > mMaxScale) {
+                    RectF rect = getDisplayRect();
+                    if (rect != null) {
+                        v.post(new AnimatedZoomRunnable(getScale(), mMaxScale,
+                                rect.centerX(), rect.centerY()));
+                        handled = true;
                     }
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float dx = Math.abs(ev.getX() - x);
-                    float dy = Math.abs(ev.getY() - y);
-                    if(isLongImage){
-                        isVertical = dy > dx;
-                        isHorizontal = dx > dy * 2;
-                    }else {
-                        isVertical = (getScale() != 1.0 && dy > dx);
-                        isHorizontal = (getScale() != 1.0 && dx > dy * 2);
-                    }
-                    break;
+                }
+            } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+                float dx = Math.abs(ev.getX() - x);
+                float dy = Math.abs(ev.getY() - y);
+                if (isLongImage) {
+                    isVertical = dy > dx;
+                    isHorizontal = dx > dy * 2;
+                } else {
+                    isVertical = (getScale() != 1.0 && dy > dx);
+                    isHorizontal = (getScale() != 1.0 && dx > dy * 2);
+                }
             }
+
             // Try the Scale/Drag detector
             if (mScaleDragDetector != null) {
                 boolean wasScaling = mScaleDragDetector.isScaling();
@@ -656,31 +653,23 @@ public class PhotoViewAttacher implements View.OnTouchListener,
             }
 //            Log.e("tag", "mScaleType: "+mScaleType + "   drawableHeight: "+drawableHeight
 //            + " viewHeight: "+ viewHeight + "  drawableWidth: "+drawableWidth + "  viewWidth: "+viewWidth) ;
-            switch (mScaleType) {
-                case FIT_CENTER:
-                    // for long image, 图片高>view高，比例也大于view的高/宽，则认为是长图
-                    if (/*drawableHeight > viewHeight &&*/ drawableHeight * 1f / drawableWidth > viewHeight * 1f / viewWidth) {
-//                        mBaseMatrix.postScale(widthScale, widthScale);
-//                        setScale(widthScale);
-                        //长图特殊处理，宽度撑满屏幕，并且顶部对齐
-                        isLongImage = true;
-                        mBaseMatrix.setRectToRect(mTempSrc, new RectF(0, 0, viewWidth, drawableHeight * widthScale), ScaleToFit.START);
-                    } else {
-                        mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
-                    }
-                    break;
-                case FIT_START:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START);
-                    break;
-                case FIT_END:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.END);
-                    break;
-                case FIT_XY:
-                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
-                    break;
-                default:
-                    break;
+            if (mScaleType == FIT_CENTER) {
+                // for long image, 图片高>view高，比例也大于view的高/宽，则认为是长图
+                if (/*drawableHeight > viewHeight &&*/ drawableHeight * 1f / drawableWidth > viewHeight * 1f / viewWidth) {
+                    // 长图特殊处理，宽度撑满屏幕，并且顶部对齐
+                    isLongImage = true;
+                    mBaseMatrix.setRectToRect(mTempSrc, new RectF(0, 0, viewWidth, drawableHeight * widthScale), ScaleToFit.START);
+                } else {
+                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                }
+            } else if (mScaleType == FIT_START) {
+                mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START);
+            } else if (mScaleType == FIT_END) {
+                mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.END);
+            } else if (mScaleType == FIT_XY) {
+                mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
             }
+
         }
         resetMatrix();
     }
@@ -694,17 +683,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
         float deltaX = 0, deltaY = 0;
         final int viewHeight = getImageViewHeight(mImageView);
         if (height <= viewHeight && rect.top >= 0) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaY = -rect.top;
-                    break;
-                case FIT_END:
-                    deltaY = viewHeight - height - rect.top;
-                    break;
-                default:
-                    deltaY = (viewHeight - height) / 2 - rect.top;
-                    break;
+            if (mScaleType == ImageView.ScaleType.FIT_START) {
+                deltaY = -rect.top;
+            } else if (mScaleType == ImageView.ScaleType.FIT_END) {
+                deltaY = viewHeight - height - rect.top;
+            } else {
+                deltaY = (viewHeight - height) / 2 - rect.top;
             }
+
             mVerticalScrollEdge = VERTICAL_EDGE_BOTH;
         } else if (rect.top >= 0) {
             mVerticalScrollEdge = VERTICAL_EDGE_TOP;
@@ -719,17 +705,14 @@ public class PhotoViewAttacher implements View.OnTouchListener,
 //        Log.e("tag", "rect: " + rect.toShortString() + " viewWidth: " + viewWidth + " viewHeight: " + viewHeight
 //                + " recLeft: " + rect.left + "  recRight: " + rect.right + " mHorizontalScrollEdge: " + mHorizontalScrollEdge);
         if (width <= viewWidth && rect.left >= 0) {
-            switch (mScaleType) {
-                case FIT_START:
-                    deltaX = -rect.left;
-                    break;
-                case FIT_END:
-                    deltaX = viewWidth - width - rect.left;
-                    break;
-                default:
-                    deltaX = (viewWidth - width) / 2 - rect.left;
-                    break;
+            if (mScaleType == ImageView.ScaleType.FIT_START) {
+                deltaX = -rect.left;
+            } else if (mScaleType == ImageView.ScaleType.FIT_END) {
+                deltaX = viewWidth - width - rect.left;
+            } else {
+                deltaX = (viewWidth - width) / 2 - rect.left;
             }
+
             mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
         } else if (rect.left >= 0) {
             mHorizontalScrollEdge = HORIZONTAL_EDGE_LEFT;

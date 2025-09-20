@@ -1,5 +1,11 @@
 package com.lxj.xpopup.animator;
 
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromCenter;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromLeftBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromLeftTop;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromRightBottom;
+import static com.lxj.xpopup.enums.PopupAnimation.ScaleAlphaFromRightTop;
+
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -34,27 +40,26 @@ public class ScaleAlphaAnimator extends PopupAnimator {
      * 根据不同的PopupAnimation来设定对应的pivot
      */
     private void applyPivot() {
-        switch (popupAnimation) {
-            case ScaleAlphaFromCenter:
-                targetView.setPivotX(targetView.getMeasuredWidth() / 2f);
-                targetView.setPivotY(targetView.getMeasuredHeight() / 2f);
-                break;
-            case ScaleAlphaFromLeftTop:
-                targetView.setPivotX(0);
-                targetView.setPivotY(0);
-                break;
-            case ScaleAlphaFromRightTop:
-                targetView.setPivotX(targetView.getMeasuredWidth());
-                targetView.setPivotY(0f);
-                break;
-            case ScaleAlphaFromLeftBottom:
-                targetView.setPivotX(0f);
-                targetView.setPivotY(targetView.getMeasuredHeight());
-                break;
-            case ScaleAlphaFromRightBottom:
-                targetView.setPivotX(targetView.getMeasuredWidth());
-                targetView.setPivotY(targetView.getMeasuredHeight());
-                break;
+
+        if (popupAnimation == ScaleAlphaFromCenter) {
+            targetView.setPivotX(targetView.getMeasuredWidth() / 2f);
+            targetView.setPivotY(targetView.getMeasuredHeight() / 2f);
+
+        } else if (popupAnimation == ScaleAlphaFromLeftTop) {
+            targetView.setPivotX(0);
+            targetView.setPivotY(0);
+
+        } else if (popupAnimation == ScaleAlphaFromRightTop) {
+            targetView.setPivotX(targetView.getMeasuredWidth());
+            targetView.setPivotY(0f);
+
+        } else if (popupAnimation == ScaleAlphaFromLeftBottom) {
+            targetView.setPivotX(0f);
+            targetView.setPivotY(targetView.getMeasuredHeight());
+
+        } else if (popupAnimation == ScaleAlphaFromRightBottom) {
+            targetView.setPivotX(targetView.getMeasuredWidth());
+            targetView.setPivotY(targetView.getMeasuredHeight());
         }
 
     }

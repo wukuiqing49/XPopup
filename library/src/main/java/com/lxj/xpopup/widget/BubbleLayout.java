@@ -81,19 +81,15 @@ public class BubbleLayout extends FrameLayout {
 
         public static Look getType(int value) {
             Look type = Look.BOTTOM;
-            switch (value) {
-                case 1:
-                    type = Look.LEFT;
-                    break;
-                case 2:
-                    type = Look.TOP;
-                    break;
-                case 3:
-                    type = Look.RIGHT;
-                    break;
-                case 4:
-                    type = Look.BOTTOM;
-                    break;
+
+            if (value == 1) {
+                type = Look.LEFT;
+            } else if (value == 2) {
+                type = Look.TOP;
+            } else if (value == 3) {
+                type = Look.RIGHT;
+            } else if (value == 4) {
+                type = Look.BOTTOM;
             }
 
             return type;
@@ -122,20 +118,16 @@ public class BubbleLayout extends FrameLayout {
 
     public void initPadding() {
         int p = mBubblePadding + mShadowRadius;
-        switch (mLook) {
-            case BOTTOM:
-                setPadding(p, p, p + mShadowX, mLookLength + p + mShadowY);
-                break;
-            case TOP:
-                setPadding(p, p + mLookLength, p + mShadowX, p + mShadowY);
-                break;
-            case LEFT:
-                setPadding(p + mLookLength, p, p + mShadowX, p + mShadowY);
-                break;
-            case RIGHT:
-                setPadding(p, p, p + mLookLength + mShadowX, p + mShadowY);
-                break;
+        if (mLook == Look.BOTTOM) {
+            setPadding(p, p, p + mShadowX, mLookLength + p + mShadowY);
+        } else if (mLook == Look.TOP) {
+            setPadding(p, p + mLookLength, p + mShadowX, p + mShadowY);
+        } else if (mLook == Look.LEFT) {
+            setPadding(p + mLookLength, p, p + mShadowX, p + mShadowY);
+        } else if (mLook == Look.RIGHT) {
+            setPadding(p, p, p + mLookLength + mShadowX, p + mShadowY);
         }
+
     }
 
     /**
@@ -226,125 +218,119 @@ public class BubbleLayout extends FrameLayout {
         int leftOffset = (leftOffset = mLookPosition) + mLookLength > mRight ? mRight - mLookWidth : leftOffset;
         leftOffset = Math.max(leftOffset, mShadowRadius);
 
-        switch (mLook) {
-            case LEFT:
-                // 判断是否足够画箭头，偏移的量 > 气泡圆角 + 气泡箭头下右圆弧
-                if (topOffset >= getLTR() + mArrowDownRightRadius) {
-                    mPath.moveTo(mLeft, topOffset - mArrowDownRightRadius);
-                    mPath.rCubicTo(0F, mArrowDownRightRadius,
-                            -mLookLength, mLookWidth / 2F - mArrowTopRightRadius + mArrowDownRightRadius,
-                            -mLookLength, mLookWidth / 2F + mArrowDownRightRadius);
-                } else {
-                    // 起点移动到箭头尖
-                    mPath.moveTo(mLeft - mLookLength, topOffset + mLookWidth / 2F);
-                }
+        if (mLook == Look.LEFT) {
+            if (topOffset >= getLTR() + mArrowDownRightRadius) {
+                mPath.moveTo(mLeft, topOffset - mArrowDownRightRadius);
+                mPath.rCubicTo(0F, mArrowDownRightRadius,
+                        -mLookLength, mLookWidth / 2F - mArrowTopRightRadius + mArrowDownRightRadius,
+                        -mLookLength, mLookWidth / 2F + mArrowDownRightRadius);
+            } else {
+                mPath.moveTo(mLeft - mLookLength, topOffset + mLookWidth / 2F);
+            }
 
-                // 判断是否足够画箭头，偏移的量 + 箭头宽 <= 气泡高 - 气泡圆角 - 气泡箭头下右圆弧
-                if (topOffset + mLookWidth < mBottom - getLDR() - mArrowDownLeftRadius) {
-                    mPath.rCubicTo(0F, mArrowTopLeftRadius,
-                            mLookLength, mLookWidth / 2F,
-                            mLookLength, mLookWidth / 2F + mArrowDownLeftRadius);
-                    mPath.lineTo(mLeft, mBottom - getLDR());
-                }
-                mPath.quadTo(mLeft, mBottom,
-                        mLeft + getLDR(), mBottom);
-                mPath.lineTo(mRight - getRDR(), mBottom);
-                mPath.quadTo(mRight, mBottom, mRight, mBottom - getRDR());
-                mPath.lineTo(mRight, mTop + getRTR());
-                mPath.quadTo(mRight, mTop, mRight - getRTR(), mTop);
-                mPath.lineTo(mLeft + getLTR(), mTop);
-                if (topOffset >= getLTR() + mArrowDownRightRadius) {
-                    mPath.quadTo(mLeft, mTop, mLeft, mTop + getLTR());
-                } else {
-                    mPath.quadTo(mLeft, mTop, mLeft - mLookLength, topOffset + mLookWidth / 2F);
-                }
-                break;
-            case TOP:
-                if (leftOffset >= getLTR() + mArrowDownLeftRadius) {
-                    mPath.moveTo(leftOffset - mArrowDownLeftRadius, mTop);
-                    mPath.rCubicTo(mArrowDownLeftRadius, 0,
-                            mLookWidth / 2F - mArrowTopLeftRadius + mArrowDownLeftRadius, -mLookLength,
-                            mLookWidth / 2F + mArrowDownLeftRadius, -mLookLength);
-                } else {
-                    mPath.moveTo(leftOffset + mLookWidth / 2F, mTop - mLookLength);
-                }
-
-                if (leftOffset + mLookWidth < mRight - getRTR() - mArrowDownRightRadius) {
-                    mPath.rCubicTo(mArrowTopRightRadius, 0F,
-                            mLookWidth / 2F, mLookLength,
-                            mLookWidth / 2F + mArrowDownRightRadius, mLookLength);
-                    mPath.lineTo(mRight - getRTR(), mTop);
-                }
-                mPath.quadTo(mRight, mTop, mRight, mTop + getRTR());
-                mPath.lineTo(mRight, mBottom - getRDR());
-                mPath.quadTo(mRight, mBottom, mRight - getRDR(), mBottom);
-                mPath.lineTo(mLeft + getLDR(), mBottom);
-                mPath.quadTo(mLeft, mBottom, mLeft, mBottom - getLDR());
-                mPath.lineTo(mLeft, mTop + getLTR());
-                if (leftOffset >= getLTR() + mArrowDownLeftRadius) {
-                    mPath.quadTo(mLeft, mTop, mLeft + getLTR(), mTop);
-                } else {
-                    mPath.quadTo(mLeft, mTop, leftOffset + mLookWidth / 2F, mTop - mLookLength);
-                }
-                break;
-            case RIGHT:
-                if (topOffset >= getRTR() + mArrowDownLeftRadius) {
-                    mPath.moveTo(mRight, topOffset - mArrowDownLeftRadius);
-                    mPath.rCubicTo(0, mArrowDownLeftRadius,
-                            mLookLength, mLookWidth / 2F - mArrowTopLeftRadius + mArrowDownLeftRadius,
-                            mLookLength, mLookWidth / 2F + mArrowDownLeftRadius);
-                } else {
-                    mPath.moveTo(mRight + mLookLength, topOffset + mLookWidth / 2F);
-                }
-
-                if (topOffset + mLookWidth < mBottom - getRDR() - mArrowDownRightRadius) {
-                    mPath.rCubicTo(0F, mArrowTopRightRadius,
-                            -mLookLength, mLookWidth / 2F,
-                            -mLookLength, mLookWidth / 2F + mArrowDownRightRadius);
-                    mPath.lineTo(mRight, mBottom - getRDR());
-                }
-                mPath.quadTo(mRight, mBottom,
-                        mRight - getRDR(), mBottom);
-                mPath.lineTo(mLeft + getLDR(), mBottom);
-                mPath.quadTo(mLeft, mBottom, mLeft, mBottom - getLDR());
-                mPath.lineTo(mLeft, mTop + getLTR());
-                mPath.quadTo(mLeft, mTop, mLeft + getLTR(), mTop);
-                mPath.lineTo(mRight - getRTR(), mTop);
-                if (topOffset >= getRTR() + mArrowDownLeftRadius) {
-                    mPath.quadTo(mRight, mTop, mRight, mTop + getRTR());
-                } else {
-                    mPath.quadTo(mRight, mTop, mRight + mLookLength, topOffset + mLookWidth / 2F);
-                }
-                break;
-            case BOTTOM:
-                if (leftOffset >= getLDR() + mArrowDownRightRadius) {
-                    mPath.moveTo(leftOffset - mArrowDownRightRadius, mBottom);
-                    mPath.rCubicTo(mArrowDownRightRadius, 0,
-                            mLookWidth / 2F - mArrowTopRightRadius + mArrowDownRightRadius, mLookLength,
-                            mLookWidth / 2F + mArrowDownRightRadius, mLookLength);
-                } else {
-                    mPath.moveTo(leftOffset + mLookWidth / 2F, mBottom + mLookLength);
-                }
-
-                if (leftOffset + mLookWidth < mRight - getRDR() - mArrowDownLeftRadius) {
-                    mPath.rCubicTo(mArrowTopLeftRadius, 0F,
-                            mLookWidth / 2F, -mLookLength,
-                            mLookWidth / 2F + mArrowDownLeftRadius, -mLookLength);
-                    mPath.lineTo(mRight - getRDR(), mBottom);
-                }
-                mPath.quadTo(mRight, mBottom, mRight, mBottom - getRDR());
-                mPath.lineTo(mRight, mTop + getRTR());
-                mPath.quadTo(mRight, mTop, mRight - getRTR(), mTop);
-                mPath.lineTo(mLeft + getLTR(), mTop);
-                mPath.quadTo(mLeft, mTop, mLeft, mTop + getLTR());
+            if (topOffset + mLookWidth < mBottom - getLDR() - mArrowDownLeftRadius) {
+                mPath.rCubicTo(0F, mArrowTopLeftRadius,
+                        mLookLength, mLookWidth / 2F,
+                        mLookLength, mLookWidth / 2F + mArrowDownLeftRadius);
                 mPath.lineTo(mLeft, mBottom - getLDR());
-                if (leftOffset >= getLDR() + mArrowDownRightRadius) {
-                    mPath.quadTo(mLeft, mBottom, mLeft + getLDR(), mBottom);
-                } else {
-                    mPath.quadTo(mLeft, mBottom, leftOffset + mLookWidth / 2F, mBottom + mLookLength);
-                }
-                break;
+            }
+            mPath.quadTo(mLeft, mBottom, mLeft + getLDR(), mBottom);
+            mPath.lineTo(mRight - getRDR(), mBottom);
+            mPath.quadTo(mRight, mBottom, mRight, mBottom - getRDR());
+            mPath.lineTo(mRight, mTop + getRTR());
+            mPath.quadTo(mRight, mTop, mRight - getRTR(), mTop);
+            mPath.lineTo(mLeft + getLTR(), mTop);
+            if (topOffset >= getLTR() + mArrowDownRightRadius) {
+                mPath.quadTo(mLeft, mTop, mLeft, mTop + getLTR());
+            } else {
+                mPath.quadTo(mLeft, mTop, mLeft - mLookLength, topOffset + mLookWidth / 2F);
+            }
+
+        } else if (mLook == Look.TOP) {
+            if (leftOffset >= getLTR() + mArrowDownLeftRadius) {
+                mPath.moveTo(leftOffset - mArrowDownLeftRadius, mTop);
+                mPath.rCubicTo(mArrowDownLeftRadius, 0,
+                        mLookWidth / 2F - mArrowTopLeftRadius + mArrowDownLeftRadius, -mLookLength,
+                        mLookWidth / 2F + mArrowDownLeftRadius, -mLookLength);
+            } else {
+                mPath.moveTo(leftOffset + mLookWidth / 2F, mTop - mLookLength);
+            }
+
+            if (leftOffset + mLookWidth < mRight - getRTR() - mArrowDownRightRadius) {
+                mPath.rCubicTo(mArrowTopRightRadius, 0F,
+                        mLookWidth / 2F, mLookLength,
+                        mLookWidth / 2F + mArrowDownRightRadius, mLookLength);
+                mPath.lineTo(mRight - getRTR(), mTop);
+            }
+            mPath.quadTo(mRight, mTop, mRight, mTop + getRTR());
+            mPath.lineTo(mRight, mBottom - getRDR());
+            mPath.quadTo(mRight, mBottom, mRight - getRDR(), mBottom);
+            mPath.lineTo(mLeft + getLDR(), mBottom);
+            mPath.quadTo(mLeft, mBottom, mLeft, mBottom - getLDR());
+            mPath.lineTo(mLeft, mTop + getLTR());
+            if (leftOffset >= getLTR() + mArrowDownLeftRadius) {
+                mPath.quadTo(mLeft, mTop, mLeft + getLTR(), mTop);
+            } else {
+                mPath.quadTo(mLeft, mTop, leftOffset + mLookWidth / 2F, mTop - mLookLength);
+            }
+
+        } else if (mLook == Look.RIGHT) {
+            if (topOffset >= getRTR() + mArrowDownLeftRadius) {
+                mPath.moveTo(mRight, topOffset - mArrowDownLeftRadius);
+                mPath.rCubicTo(0, mArrowDownLeftRadius,
+                        mLookLength, mLookWidth / 2F - mArrowTopLeftRadius + mArrowDownLeftRadius,
+                        mLookLength, mLookWidth / 2F + mArrowDownLeftRadius);
+            } else {
+                mPath.moveTo(mRight + mLookLength, topOffset + mLookWidth / 2F);
+            }
+
+            if (topOffset + mLookWidth < mBottom - getRDR() - mArrowDownRightRadius) {
+                mPath.rCubicTo(0F, mArrowTopRightRadius,
+                        -mLookLength, mLookWidth / 2F,
+                        -mLookLength, mLookWidth / 2F + mArrowDownRightRadius);
+                mPath.lineTo(mRight, mBottom - getRDR());
+            }
+            mPath.quadTo(mRight, mBottom, mRight - getRDR(), mBottom);
+            mPath.lineTo(mLeft + getLDR(), mBottom);
+            mPath.quadTo(mLeft, mBottom, mLeft, mBottom - getLDR());
+            mPath.lineTo(mLeft, mTop + getLTR());
+            mPath.quadTo(mLeft, mTop, mLeft + getLTR(), mTop);
+            mPath.lineTo(mRight - getRTR(), mTop);
+            if (topOffset >= getRTR() + mArrowDownLeftRadius) {
+                mPath.quadTo(mRight, mTop, mRight, mTop + getRTR());
+            } else {
+                mPath.quadTo(mRight, mTop, mRight + mLookLength, topOffset + mLookWidth / 2F);
+            }
+
+        } else if (mLook == Look.BOTTOM) {
+            if (leftOffset >= getLDR() + mArrowDownRightRadius) {
+                mPath.moveTo(leftOffset - mArrowDownRightRadius, mBottom);
+                mPath.rCubicTo(mArrowDownRightRadius, 0,
+                        mLookWidth / 2F - mArrowTopRightRadius + mArrowDownRightRadius, mLookLength,
+                        mLookWidth / 2F + mArrowDownRightRadius, mLookLength);
+            } else {
+                mPath.moveTo(leftOffset + mLookWidth / 2F, mBottom + mLookLength);
+            }
+
+            if (leftOffset + mLookWidth < mRight - getRDR() - mArrowDownLeftRadius) {
+                mPath.rCubicTo(mArrowTopLeftRadius, 0F,
+                        mLookWidth / 2F, -mLookLength,
+                        mLookWidth / 2F + mArrowDownLeftRadius, -mLookLength);
+                mPath.lineTo(mRight - getRDR(), mBottom);
+            }
+            mPath.quadTo(mRight, mBottom, mRight, mBottom - getRDR());
+            mPath.lineTo(mRight, mTop + getRTR());
+            mPath.quadTo(mRight, mTop, mRight - getRTR(), mTop);
+            mPath.lineTo(mLeft + getLTR(), mTop);
+            mPath.quadTo(mLeft, mTop, mLeft, mTop + getLTR());
+            mPath.lineTo(mLeft, mBottom - getLDR());
+            if (leftOffset >= getLDR() + mArrowDownRightRadius) {
+                mPath.quadTo(mLeft, mBottom, mLeft + getLDR(), mBottom);
+            } else {
+                mPath.quadTo(mLeft, mBottom, leftOffset + mLookWidth / 2F, mBottom + mLookLength);
+            }
         }
+
 
         mPath.close();
     }
