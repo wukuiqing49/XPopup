@@ -24,3 +24,34 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
+# Gson
+-keep class com.google.gson.** { *; }
+-keepattributes Signature
+
+# XPopup
+-keep class com.lxj.xpopup.** { *; }
+
+-dontwarn okhttp3.Call
+-dontwarn okhttp3.Callback
+-dontwarn okhttp3.Connection
+-dontwarn okhttp3.EventListener$Factory
+-dontwarn okhttp3.EventListener
+-dontwarn okhttp3.Handshake
+-dontwarn okhttp3.HttpUrl
+-dontwarn okhttp3.Interceptor$Chain
+-dontwarn okhttp3.Interceptor
+-dontwarn okhttp3.MediaType
+-dontwarn okhttp3.OkHttpClient$Builder
+-dontwarn okhttp3.OkHttpClient
+-dontwarn okhttp3.Protocol
+-dontwarn okhttp3.Request$Builder
+-dontwarn okhttp3.Request
+-dontwarn okhttp3.RequestBody
+-dontwarn okhttp3.Response$Builder
+-dontwarn okhttp3.Response
+-dontwarn okhttp3.ResponseBody
+-dontwarn okio.BufferedSink
+-dontwarn okio.BufferedSource
+-dontwarn okio.Okio
+-dontwarn okio.Sink
+-dontwarn okio.Source
