@@ -1,12 +1,20 @@
 ## XPopup
-![](https://api.bintray.com/packages/li-xiaojun/jrepo/xpopup/images/download.svg)  ![](https://img.shields.io/badge/platform-android-blue.svg)  ![](https://img.shields.io/badge/author-li--xiaojun-brightgreen.svg) ![](https://img.shields.io/badge/compileSdkVersion-26-blue.svg) ![](https://img.shields.io/badge/minSdkVersion-15-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
 <a href="https://tracking.gitads.io/?repo=XPopup"><img src="https://images.gitads.io/XPopup" style="width: 80%;height:auto"/></a>
 
 ### You can click the Ad Image to buy me a coffee!!!
 
-### English | [中文]()
+### English | [中文](https://github.com/wukuiqing49/XPopup/blob/master/README.md)
+
+### What's new in 3.1.0
+
+- Migrated all Java sources to Kotlin 2.2.21 and upgraded to AGP 8.13.2, Gradle 8.13, and JDK 17.
+- Upgraded `compileSdk` and `targetSdk` to 36 with Android 15/16 edge-to-edge support.
+- Added status bar, display cutout, gesture navigation, three-button navigation, and landscape side navigation handling.
+- Removed EasyAdapter, Glide, and SubsamplingScaleImageView from the Library module; image loading implementations now live in the Demo only.
+- Published through JitPack as `com.github.wukuiqing49:XPopup:3.1.0`.
 
 Powerful，material UI，elegant interaction general popup！can absolutely replace Dialog，PopupWindow，PopupMenu，BottomSheet，DrawerLayout，Spinner. With built-in many beautiful animation，you can custom your UI and logic！
 
@@ -47,19 +55,23 @@ Scan qrcode to download Demo.apk：
 
 ## Gradle
 
-First, you need add gradle dependency：
+Add the JitPack repository：
 ```groovy
-implementation 'com.lxj:xpopup:1.9.0'
+dependencyResolutionManagement {
+    repositories {
+        maven { url = uri('https://jitpack.io') }
+    }
+}
 ```
 
-Second, you also need these：
+Add the dependency：
 ```groovy
-//version must >= 26
-implementation 'com.android.support:appcompat-v7:28.0.0'
-implementation 'com.android.support:recyclerview-v7:28.0.0'
-implementation 'com.android.support:design:28.0.0'
+implementation 'com.github.wukuiqing49:XPopup:3.1.0'
 ```
 
+Version 3.1.0 requires `compileSdk 36` and supports `minSdk 21`. AndroidX, Material,
+and RecyclerView dependencies are published transitively. Glide, EasyAdapter, and
+SubsamplingScaleImageView are not Library dependencies.
 
 
 ## WIKI

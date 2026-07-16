@@ -1,11 +1,19 @@
 ## XPopup
-![](https://api.bintray.com/packages/li-xiaojun/jrepo/xpopup/images/download.svg)  ![](https://img.shields.io/badge/platform-android-blue.svg)  ![](https://img.shields.io/badge/author-li--xiaojun-brightgreen.svg) ![](https://img.shields.io/badge/compileSdkVersion-28-blue.svg) ![](https://img.shields.io/badge/minSdkVersion-19-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
 国内Gitee镜像地址：https://gitee.com/lxj_gitee/XPopup
 
 
-### 中文 | [English](https://github.com/li-xiaojun/XPopup/blob/master/README-en.md)
+### 中文 | [English](https://github.com/wukuiqing49/XPopup/blob/master/README-en.md)
+
+### 3.1.0 升级说明
+
+- 全部 Java 源码迁移为 Kotlin，使用 Kotlin 2.2.21、AGP 8.13.2、Gradle 8.13 和 JDK 17。
+- `compileSdk`、`targetSdk` 升级到 36，兼容 Android 15/16 强制 edge-to-edge。
+- 完成状态栏、刘海、手势导航、三键导航和横屏侧边导航适配。
+- Library 已移除 EasyAdapter、Glide 和 SubsamplingScaleImageView；图片加载实现仅保留在 Demo。
+- JitPack 坐标更新为 `com.github.wukuiqing49:XPopup:3.1.0`。
 - 内置几种了常用的弹窗，十几种良好的动画，将弹窗和动画的自定义设计的极其简单；目前还没有出现XPopup实现不了的弹窗效果。
   内置弹窗允许你使用项目已有的布局，同时还能用上XPopup提供的动画，交互和逻辑封装。
 - UI动画简洁，遵循Material Design，在设计动画的时候考虑了很多细节，过渡，层级的变化
@@ -85,38 +93,31 @@ Gif录制的有些卡顿，真机预览效果更佳。扫描二维码下载Demo�
 
 ## Gradle
 
-[![](https://jitpack.io/v/li-xiaojun/XPopup.svg)](https://jitpack.io/#li-xiaojun/XPopup)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup)
+```groovy
+implementation 'com.github.wukuiqing49:XPopup:3.1.0'
 ```
-implementation 'com.github.li-xiaojun:XPopup:版本号看上面'
-```
-jitpack还要求在工程根目录的`build.gradle`中添加如下：
-```
-allprojects {
+jitpack 还要求在工程的依赖仓库中加入：
+```groovy
+dependencyResolutionManagement {
     repositories {
-        ...
-        maven { url 'https://jitpack.io' }
+        maven { url = uri('https://jitpack.io') }
     }
 }
 ```
 
-其中编译版本必须 >= 29：
-```
-compileSdkVersion 29
-```
-
-必须添加的依赖库，版本不用和我一致：
+当前版本要求：
 ```groovy
-implementation 'androidx.appcompat:appcompat:1.3.1'
-implementation 'com.google.android.material:material:1.4.0'
-implementation 'androidx.recyclerview:recyclerview:1.2.1'
-```
-
-xpopup依赖了`subsampling-scale-image-view`, 如果你也依赖了这个库并且版本冲突，可以做个exclude即可：
-```groovy
-implementation ('com.github.li-xiaojun:XPopup:版本号看上面'){
-  exclude group: "com.davemorrissey.labs", module: "subsampling-scale-image-view-androidx"
+android {
+    compileSdk 36
+    defaultConfig {
+        minSdk 21
+    }
 }
 ```
+
+Library 的 AndroidX、Material 和 RecyclerView 依赖会由 Maven 自动传递。Glide、EasyAdapter 和
+`subsampling-scale-image-view` 不再属于 Library 依赖，需要图片加载时由宿主应用自行选择实现。
 
 ## 使用文档
 
