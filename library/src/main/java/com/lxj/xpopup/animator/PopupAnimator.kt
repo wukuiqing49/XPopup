@@ -31,7 +31,7 @@ abstract class PopupAnimator {
     abstract fun animateShow()
     abstract fun animateDismiss()
 
-    protected fun observerAnimator(animator: ValueAnimator): ValueAnimator {
+    protected open fun observerAnimator(animator: ValueAnimator): ValueAnimator {
         animator.removeAllListeners()
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator) {
@@ -47,7 +47,7 @@ abstract class PopupAnimator {
         return animator
     }
 
-    protected fun observerAnimator(animator: ViewPropertyAnimator): ViewPropertyAnimator {
+    protected open fun observerAnimator(animator: ViewPropertyAnimator): ViewPropertyAnimator {
         animator.setListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator) {
                 super.onAnimationStart(animation)

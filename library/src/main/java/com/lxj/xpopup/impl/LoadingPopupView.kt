@@ -17,7 +17,7 @@ import com.lxj.xpopup.util.XPopupUtils
  * Description: 加载对话框
  * Create by dance, at 2018/12/16
  */
-class LoadingPopupView(context: Context, bindLayoutId: Int) : CenterPopupView(context) {
+open class LoadingPopupView(context: Context, bindLayoutId: Int) : CenterPopupView(context) {
     enum class Style {
         Spinner, ProgressBar
     }
@@ -57,7 +57,7 @@ class LoadingPopupView(context: Context, bindLayoutId: Int) : CenterPopupView(co
         firstShow = false
     }
 
-    protected fun setup() {
+    protected open fun setup() {
         post(object : Runnable {
             override fun run() {
                 if (!firstShow) {

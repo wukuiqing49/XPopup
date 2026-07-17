@@ -20,7 +20,7 @@ import com.lxj.xpopup.widget.VerticalRecyclerView
  * Description: 在中间的列表对话框
  * Create by dance, at 2018/12/16
  */
-class CenterListPopupView(context: Context, bindLayoutId: Int, bindItemLayoutId: Int) :
+open class CenterListPopupView(context: Context, bindLayoutId: Int, bindItemLayoutId: Int) :
     CenterPopupView(context) {
     var recyclerView: RecyclerView? = null
     var tv_title: TextView? = null

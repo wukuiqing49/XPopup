@@ -24,7 +24,7 @@ abstract class PartShadowPopupView(context: Context) : BasePopupView(context) {
     override val innerLayoutId: Int
         get() = R.layout._xpopup_partshadow_popup_view
 
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         val contentView = LayoutInflater.from(getContext())
             .inflate(implLayoutId, attachPopupContainer, false)
         attachPopupContainer.addView(contentView)

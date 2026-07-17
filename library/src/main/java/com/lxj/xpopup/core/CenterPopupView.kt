@@ -28,7 +28,7 @@ open class CenterPopupView(context: Context) : BasePopupView(context) {
         centerPopupContainer = findViewById<FrameLayout>(R.id.centerPopupContainer)
     }
 
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         contentView =
             LayoutInflater.from(getContext()).inflate(implLayoutId, centerPopupContainer, false)
         val params = contentView!!.getLayoutParams() as LayoutParams
@@ -58,7 +58,7 @@ open class CenterPopupView(context: Context) : BasePopupView(context) {
         )
     }
 
-    protected fun applyTheme() {
+    protected open fun applyTheme() {
         if (bindLayoutId == 0) {
             if (popupInfo!!.isDarkTheme) {
                 applyDarkTheme()

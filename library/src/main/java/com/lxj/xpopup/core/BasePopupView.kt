@@ -579,6 +579,7 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
 
     protected open fun applyLightTheme() {}
 
+
     /**
      * 执行显示动画：动画由2部分组成，一个是背景渐变动画，一个是Content的动画；
      * 背景动画由父类实现，Content由子类实现
@@ -825,13 +826,13 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
     /**
      * onDismiss之前执行一次
      */
-    protected fun beforeDismiss() {
+    protected open fun beforeDismiss() {
     }
 
     /**
      * onCreated之后，onShow之前执行
      */
-    protected fun beforeShow() {
+    protected open fun beforeShow() {
     }
 
     /**
@@ -840,7 +841,7 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
     protected open fun onShow() {
     }
 
-    protected fun onKeyboardHeightChange(height: Int) {}
+    protected open fun onKeyboardHeightChange(height: Int) {}
 
     override fun onDestroy(owner: LifecycleOwner) {
         onDestroy()

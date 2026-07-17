@@ -29,7 +29,7 @@ abstract class AttachPopupView(context: Context) : BasePopupView(context) {
     protected var defaultOffsetX: Int = 0
     protected var attachPopupContainer: FrameLayout
 
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         val contentView = LayoutInflater.from(getContext())
             .inflate(implLayoutId, attachPopupContainer, false)
         attachPopupContainer.addView(contentView)
@@ -72,7 +72,7 @@ abstract class AttachPopupView(context: Context) : BasePopupView(context) {
             })
     }
 
-    protected fun applyBg() {
+    protected open fun applyBg() {
         if (!isCreated) {
             //实现shadow
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -290,7 +290,7 @@ abstract class AttachPopupView(context: Context) : BasePopupView(context) {
         }
     }
 
-    protected fun initAndStartAnimation() {
+    protected open fun initAndStartAnimation() {
         initAnimator()
         doShowAnimation()
         doAfterShow()

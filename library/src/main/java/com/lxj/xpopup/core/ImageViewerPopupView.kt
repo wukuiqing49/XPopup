@@ -474,7 +474,7 @@ open class ImageViewerPopupView(context: Context) : BasePopupView(context), OnDr
     /**
      * 保存图片到相册，会自动检查是否有保存权限
      */
-    protected fun save() {
+    protected open fun save() {
         XPermission.create(getContext(), PermissionConstants.STORAGE)!!
             .callback(object : XPermission.SimpleCallback {
                 override fun onGranted() {

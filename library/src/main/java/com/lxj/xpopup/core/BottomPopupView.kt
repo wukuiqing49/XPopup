@@ -19,7 +19,7 @@ import com.lxj.xpopup.widget.SmartDragLayout
  */
 open class BottomPopupView(context: Context) : BasePopupView(context) {
     protected var bottomPopupContainer: SmartDragLayout
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         val contentView =
             LayoutInflater.from(getContext()).inflate(implLayoutId, bottomPopupContainer, false)
         bottomPopupContainer.addView(contentView)

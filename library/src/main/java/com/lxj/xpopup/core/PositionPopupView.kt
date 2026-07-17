@@ -77,7 +77,7 @@ open class PositionPopupView(context: Context) : BasePopupView(context) {
         initAndStartAnimation()
     }
 
-    protected fun initAndStartAnimation() {
+    protected open fun initAndStartAnimation() {
         initAnimator()
         doShowAnimation()
         doAfterShow()

@@ -71,6 +71,7 @@ import kotlin.math.min
  */
 object XPopupUtils {
     //应用界面可见高度，可能不包含导航和状态栏，看Rom实现
+    @JvmStatic
     fun getAppHeight(context: Context): Int {
         val activity = context2Activity(context)
         if (activity != null && activity.getWindow().getDecorView().getHeight() > 0) {
@@ -79,6 +80,7 @@ object XPopupUtils {
         return getWindowBounds(context, false).height()
     }
 
+    @JvmStatic
     fun getAppWidth(context: Context): Int {
         val activity = context2Activity(context)
         if (activity != null && activity.getWindow().getDecorView().getWidth() > 0) {
@@ -88,10 +90,12 @@ object XPopupUtils {
     }
 
     //屏幕的高度，包含状态栏，导航栏，看Rom实现
+    @JvmStatic
     fun getScreenHeight(context: Context): Int {
         return getWindowBounds(context, true).height()
     }
 
+    @JvmStatic
     fun getScreenWidth(context: Context): Int {
         return getWindowBounds(context, true).width()
     }
@@ -108,11 +112,13 @@ object XPopupUtils {
         return Rect(0, 0, metrics.widthPixels, metrics.heightPixels)
     }
 
+    @JvmStatic
     fun dp2px(context: Context, dipValue: Float): Int {
         val scale = context.getResources().getDisplayMetrics().density
         return (dipValue * scale + 0.5f).toInt()
     }
 
+    @JvmStatic
     fun getStatusBarHeight(window: Window?): Int {
         if (window != null) {
             val windowInsets = ViewCompat.getRootWindowInsets(window.getDecorView())
@@ -130,6 +136,7 @@ object XPopupUtils {
      *
      * @return the navigation bar's height
      */
+    @JvmStatic
     fun getNavBarHeight(window: Window?): Int {
         if (window != null) {
             val windowInsets = ViewCompat.getRootWindowInsets(window.getDecorView())
@@ -144,6 +151,7 @@ object XPopupUtils {
         return if (resourceId == 0) 0 else res.getDimensionPixelSize(resourceId)
     }
 
+    @JvmStatic
     fun getActionBarHeight(context: Context?): Int {
         val activity = context2Activity(context)
         if (activity == null) return 0
@@ -155,6 +163,7 @@ object XPopupUtils {
         return if (actionBar == null) 0 else actionBar.getHeight()
     }
 
+    @JvmStatic
     fun setWidthHeight(target: View, width: Int, height: Int) {
         if (width <= 0 && height <= 0) return
         val params = target.getLayoutParams()
@@ -163,6 +172,7 @@ object XPopupUtils {
         target.setLayoutParams(params)
     }
 
+    @JvmStatic
     fun applyPopupSize(
         content: ViewGroup, maxWidth: Int, maxHeight: Int,
         popupWidth: Int, popupHeight: Int, afterApplySize: Runnable?
@@ -218,10 +228,12 @@ object XPopupUtils {
         })
     }
 
+    @JvmStatic
     fun setCursorDrawableColor(et: EditText?, color: Int) {
         //暂时没有找到有效的方法来动态设置cursor的颜色
     }
 
+    @JvmStatic
     fun createBitmapDrawable(context: Context, width: Int, color: Int): BitmapDrawable {
         val bitmap = Bitmap.createBitmap(width, dp2px(context, 1.5f), Bitmap.Config.ARGB_4444)
         val canvas = Canvas(bitmap)
@@ -233,6 +245,7 @@ object XPopupUtils {
         return bitmapDrawable
     }
 
+    @JvmStatic
     fun createSelector(defaultDrawable: Drawable?, focusDrawable: Drawable?): StateListDrawable {
         val stateListDrawable = StateListDrawable()
         stateListDrawable.addState(intArrayOf(android.R.attr.state_focused), focusDrawable)
@@ -240,12 +253,14 @@ object XPopupUtils {
         return stateListDrawable
     }
 
+    @JvmStatic
     fun isInRect(x: Float, y: Float, rect: Rect): Boolean {
         return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
     }
 
     private var sDecorViewDelta = 0
 
+    @JvmStatic
     fun getDecorViewInvisibleHeight(window: Window?): Int {
         if (window == null) return 0
         val decorView = window.getDecorView()
@@ -271,6 +286,7 @@ object XPopupUtils {
     //这个不是必现的，暂时无解
     private var preKeyboardHeight = 0
 
+    @JvmStatic
     fun moveUpToKeyboard(keyboardHeight: Int, pv: BasePopupView) {
         preKeyboardHeight = keyboardHeight
         pv.post(object : Runnable {
@@ -344,6 +360,7 @@ object XPopupUtils {
             .start()
     }
 
+    @JvmStatic
     fun moveDown(pv: BasePopupView) {
         //暂时忽略PartShadow弹窗和AttachPopupView
         if (pv is PositionPopupView || pv is AttachPopupView || pv is BubbleAttachPopupView) return
@@ -356,6 +373,7 @@ object XPopupUtils {
             .setDuration(100).start()
     }
 
+    @JvmStatic
     fun isNavBarVisible(window: Window?): Boolean {
         if (window == null) return false
         var isVisible = false
@@ -405,6 +423,7 @@ object XPopupUtils {
         return isVisible
     }
 
+    @JvmStatic
     fun findAllEditText(list: ArrayList<EditText>, group: ViewGroup) {
         for (i in 0 until group.getChildCount()) {
             val v = group.getChildAt(i)
@@ -416,6 +435,7 @@ object XPopupUtils {
         }
     }
 
+    @JvmStatic
     fun saveBmpToAlbum(context: Context, imageLoader: XPopupImageLoader, uri: Any) {
         val executor = Executors.newSingleThreadExecutor()
         executor.execute(object : Runnable {
@@ -675,6 +695,7 @@ object XPopupUtils {
         return small
     }
 
+    @JvmStatic
     fun isLayoutRtl(context: Context): Boolean {
         val primaryLocale: Locale?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -685,6 +706,7 @@ object XPopupUtils {
         return TextUtils.getLayoutDirectionFromLocale(primaryLocale) == View.LAYOUT_DIRECTION_RTL
     }
 
+    @JvmStatic
     fun context2Activity(ctx: Context?): Activity? {
         var context = ctx
         while (context is ContextWrapper) {
@@ -697,10 +719,12 @@ object XPopupUtils {
         return null
     }
 
+    @JvmStatic
     fun context2Activity(view: View): Activity? {
         return context2Activity(view.getContext())
     }
 
+    @JvmStatic
     fun createDrawable(color: Int, radius: Float): Drawable {
         val drawable = GradientDrawable()
         drawable.setShape(GradientDrawable.RECTANGLE)
@@ -709,6 +733,7 @@ object XPopupUtils {
         return drawable
     }
 
+    @JvmStatic
     fun createDrawable(
         color: Int, tlRadius: Float, trRadius: Float, brRadius: Float,
         blRadius: Float
@@ -727,6 +752,7 @@ object XPopupUtils {
         return drawable
     }
 
+    @JvmStatic
     fun hasSetKeyListener(view: View?): Boolean {
         try {
             val viewClazz = Class.forName("android.view.View")
@@ -747,6 +773,7 @@ object XPopupUtils {
         }
     }
 
+    @JvmStatic
     fun calculateInSampleSize(
         options: BitmapFactory.Options,
         maxWidth: Int,
@@ -763,6 +790,7 @@ object XPopupUtils {
         return inSampleSize
     }
 
+    @JvmStatic
     fun getBitmap(file: File?, maxWidth: Int, maxHeight: Int): Bitmap? {
         if (file == null) return null
         val options = BitmapFactory.Options()
@@ -773,6 +801,7 @@ object XPopupUtils {
         return BitmapFactory.decodeFile(file.getAbsolutePath(), options)
     }
 
+    @JvmStatic
     fun getImageSize(file: File?): IntArray {
         if (file == null) return intArrayOf(0, 0)
         val opts = BitmapFactory.Options()
@@ -781,6 +810,7 @@ object XPopupUtils {
         return intArrayOf(opts.outWidth, opts.outHeight)
     }
 
+    @JvmStatic
     fun getImageType(file: File?): String {
         if (file == null) return ""
         var `is`: InputStream? = null
@@ -824,6 +854,7 @@ object XPopupUtils {
     private val HEX_DIGITS_LOWER =
         charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
 
+    @JvmStatic
     fun bytes2HexString(bytes: ByteArray?, isUpperCase: Boolean): String {
         if (bytes == null) return ""
         val hexDigits = if (isUpperCase) HEX_DIGITS_UPPER else HEX_DIGITS_LOWER
@@ -841,6 +872,7 @@ object XPopupUtils {
     }
 
 
+    @JvmStatic
     fun getRotateDegree(filePath: String): Int {
         try {
             val exifInterface = ExifInterface(filePath)
@@ -863,6 +895,7 @@ object XPopupUtils {
         }
     }
 
+    @JvmStatic
     fun rotate(
         src: Bitmap,
         degrees: Int,
@@ -876,12 +909,14 @@ object XPopupUtils {
         return ret
     }
 
+    @JvmStatic
     fun getViewRect(view: View): Rect {
         val rect = Rect()
         view.getGlobalVisibleRect(rect)
         return rect
     }
 
+    @JvmStatic
     fun isLandscape(context: Context): Boolean {
         return (context.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE)
@@ -892,6 +927,7 @@ object XPopupUtils {
                 and Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE)
 
+    @JvmStatic
     fun setVisible(view: View?, isVisible: Boolean) {
         if (view != null) {
             view.setVisibility(if (isVisible) View.VISIBLE else View.GONE)

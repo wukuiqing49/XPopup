@@ -18,7 +18,7 @@ import com.lxj.xpopup.widget.VerticalRecyclerView
  * Description: Attach类型的列表弹窗
  * Create by dance, at 2018/12/12
  */
-class AttachListPopupView(
+open class AttachListPopupView(
     context: Context,
     protected var bindLayoutId: Int,
     protected var bindItemLayoutId: Int
@@ -76,7 +76,7 @@ class AttachListPopupView(
         applyTheme()
     }
 
-    protected fun applyTheme() {
+    protected open fun applyTheme() {
         if (bindLayoutId == 0) {
             if (popupInfo.isDarkTheme) {
                 applyDarkTheme()

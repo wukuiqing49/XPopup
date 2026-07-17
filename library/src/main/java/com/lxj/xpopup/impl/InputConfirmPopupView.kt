@@ -13,7 +13,7 @@ import com.lxj.xpopup.util.XPopupUtils
  * Description: 带输入框，确定和取消的对话框
  * Create by dance, at 2018/12/16
  */
-class InputConfirmPopupView
+open class InputConfirmPopupView
 /**
  * @param context
  * @param bindLayoutId 在Confirm弹窗基础上需要增加一个id为et_input的EditText

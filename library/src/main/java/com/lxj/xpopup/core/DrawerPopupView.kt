@@ -27,7 +27,7 @@ abstract class DrawerPopupView(context: Context) : BasePopupView(context) {
     protected var drawerLayout: PopupDrawerLayout
     protected var drawerContentContainer: FrameLayout
     var mFraction: Float = 0f
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         val contentView =
             LayoutInflater.from(getContext()).inflate(implLayoutId, drawerContentContainer, false)
         drawerContentContainer.addView(contentView)

@@ -21,7 +21,7 @@ import com.lxj.xpopup.widget.VerticalRecyclerView
  * Description: 底部的列表对话框
  * Create by dance, at 2018/12/16
  */
-class BottomListPopupView(
+open class BottomListPopupView(
     context: Context,
     protected var bindLayoutId: Int,
     protected var bindItemLayoutId: Int
@@ -172,7 +172,7 @@ class BottomListPopupView(
         return this
     }
 
-    protected fun applyTheme() {
+    protected open fun applyTheme() {
         if (bindLayoutId == 0) {
             if (popupInfo.isDarkTheme) {
                 applyDarkTheme()

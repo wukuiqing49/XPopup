@@ -27,7 +27,7 @@ abstract class BubbleAttachPopupView(context: Context) : BasePopupView(context) 
     protected var defaultOffsetX: Int = 0
     protected var bubbleContainer: BubbleLayout
 
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         val contentView =
             LayoutInflater.from(getContext()).inflate(implLayoutId, bubbleContainer, false)
         bubbleContainer.addView(contentView)
@@ -284,7 +284,7 @@ abstract class BubbleAttachPopupView(context: Context) : BasePopupView(context) 
         }
     }
 
-    protected fun initAndStartAnimation() {
+    protected open fun initAndStartAnimation() {
         initAnimator()
         doShowAnimation()
         doAfterShow()

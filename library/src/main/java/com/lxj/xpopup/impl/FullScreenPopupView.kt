@@ -28,7 +28,7 @@ open class FullScreenPopupView(context: Context) : BasePopupView(context) {
     override val innerLayoutId: Int
         get() = R.layout._xpopup_fullscreen_popup_view
 
-    protected fun addInnerContent() {
+    protected open fun addInnerContent() {
         contentView =
             LayoutInflater.from(getContext()).inflate(implLayoutId, fullPopupContainer, false)
         fullPopupContainer.addView(contentView)
