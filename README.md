@@ -1,12 +1,12 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.1-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.2-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
-### 3.1.1 Compatibility
+### 3.1.2 Compatibility
 
-- Compiled with Kotlin 1.8.22 and Java 8 bytecode; Kotlin consumers need version 1.8 or newer.
+- Build requires JDK 17. The published Android library targets Java 8 bytecode and is callable from Java 8+ and Kotlin 1.7.20+ projects.
 - Supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies.
-- JitPack: `com.github.wukuiqing49:XPopup:3.1.1`.
+- JitPack: `com.github.wukuiqing49:XPopup:3.1.2`.
 
 国内Gitee镜像地址：https://gitee.com/lxj_gitee/XPopup
 
@@ -15,7 +15,7 @@
 
 ### 3.1.0 升级说明
 
-- 全部 Java 源码迁移为 Kotlin，使用 Kotlin 2.2.21、AGP 8.13.2、Gradle 8.13 和 JDK 17。
+- 全部 Java 源码迁移为 Kotlin，使用 Kotlin 1.8.22、AGP 8.13.2、Gradle 8.13 和 JDK 17。
 - `compileSdk`、`targetSdk` 升级到 36，兼容 Android 15/16 强制 edge-to-edge。
 - 完成状态栏、刘海、手势导航、三键导航和横屏侧边导航适配。
 - Library 已移除 EasyAdapter、Glide 和 SubsamplingScaleImageView；图片加载实现仅保留在 Demo。
@@ -101,7 +101,7 @@ Gif录制的有些卡顿，真机预览效果更佳。扫描二维码下载Demo�
 
 [![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup)
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.1.1'
+implementation 'com.github.wukuiqing49:XPopup:3.1.2'
 ```
 jitpack 还要求在工程的依赖仓库中加入：
 ```groovy

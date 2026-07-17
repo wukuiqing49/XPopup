@@ -44,7 +44,11 @@ object XPopup {
     /**
      * 全局弹窗的设置
      */
+    @get:JvmStatic
+    @set:JvmStatic
     var primaryColor: Int = Color.parseColor("#121212")
+    @get:JvmStatic
+    @set:JvmStatic
     var animationDuration: Int = 300
         /**
          * 设置全局动画时长
@@ -61,6 +65,8 @@ object XPopup {
      *
      * @param color
      */
+    @get:JvmStatic
+    @set:JvmStatic
     var statusBarBgColor: Int = Color.parseColor("#55000000")
 
     /**
@@ -68,20 +74,27 @@ object XPopup {
      *
      * @param color
      */
+    @get:JvmStatic
+    @set:JvmStatic
     var navigationBarColor: Int = 0
 
     /**
      * 设置全局的背景阴影颜色
      * @param color
      */
+    @get:JvmStatic
+    @set:JvmStatic
     var shadowBgColor: Int = Color.parseColor("#7F000000")
+    @JvmField
     var isLightStatusBar: Int = 0 //大于0为true，小于0为false
+    @JvmField
     var isLightNavigationBar: Int = 0 //大于0为true，小于0为false
 
     /**
      * 统一设置是否是亮色状态栏
      * @param isLight
      */
+    @JvmStatic
     fun setIsLightStatusBar(isLight: Boolean) {
         isLightStatusBar = if (isLight) 1 else -1
     }
@@ -90,6 +103,7 @@ object XPopup {
      * 统一设置是否是亮色导航栏
      * @param isLight
      */
+    @JvmStatic
     fun setIsLightNavigationBar(isLight: Boolean) {
         isLightNavigationBar = if (isLight) 1 else -1
     }
@@ -98,7 +112,10 @@ object XPopup {
      * 在长按弹出弹窗后，能保证下层View不能滑动
      * @param v
      */
+    @JvmField
     var longClickPoint: PointF? = null
+
+    @JvmStatic
     fun fixLongClick(v: View) {
         v.setOnTouchListener(object : OnTouchListener {
             override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -127,6 +144,7 @@ object XPopup {
      * @param callback
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
+    @JvmStatic
     fun requestOverlayPermission(context: Context?, callback: XPermission.SimpleCallback) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             XPermission.create(context)!!.requestDrawOverlays(callback)

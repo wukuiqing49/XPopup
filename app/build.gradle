@@ -15,7 +15,7 @@ android {
         applicationId "com.lxj.xpopupdemo"
         minSdk 21
         targetSdk 36
-        versionCode 9
+        versionCode 10
         versionName xpopup_version
 //        ndk {
 //            // 设置支持的SO库架构
