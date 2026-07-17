@@ -18,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -40,6 +39,7 @@ import androidx.annotation.FloatRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.exifinterface.media.ExifInterface
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.lxj.xpopup.R
 import com.lxj.xpopup.core.AttachPopupView
@@ -406,7 +406,7 @@ object XPopupUtils {
     }
 
     fun findAllEditText(list: ArrayList<EditText>, group: ViewGroup) {
-        for (i in 0..<group.getChildCount()) {
+        for (i in 0 until group.getChildCount()) {
             val v = group.getChildAt(i)
             if (v is EditText && v.getVisibility() == View.VISIBLE) {
                 list.add(v)
@@ -554,7 +554,7 @@ object XPopupUtils {
         radius: Int
     ) {
         val diameter = radius * 2 + 1
-        for (y in 0..<height) {
+        for (y in 0 until height) {
             val row = y * width
             var a = 0
             var r = 0
@@ -567,7 +567,7 @@ object XPopupUtils {
                 g += color shr 8 and 0xff
                 b += color and 0xff
             }
-            for (x in 0..<width) {
+            for (x in 0 until width) {
                 target[row + x] =
                     a / diameter shl 24 or (r / diameter shl 16) or (g / diameter shl 8) or b / diameter
                 val remove = source[row + max(0, x - radius)]
@@ -588,7 +588,7 @@ object XPopupUtils {
         radius: Int
     ) {
         val diameter = radius * 2 + 1
-        for (x in 0..<width) {
+        for (x in 0 until width) {
             var a = 0
             var r = 0
             var g = 0
@@ -600,7 +600,7 @@ object XPopupUtils {
                 g += color shr 8 and 0xff
                 b += color and 0xff
             }
-            for (y in 0..<height) {
+            for (y in 0 until height) {
                 target[y * width + x] =
                     a / diameter shl 24 or (r / diameter shl 16) or (g / diameter shl 8) or b / diameter
                 val remove = source[max(0, y - radius) * width + x]

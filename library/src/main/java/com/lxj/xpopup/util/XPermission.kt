@@ -1,6 +1,5 @@
 package com.lxj.xpopup.util
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -21,7 +20,8 @@ import java.util.Arrays
  * Description: copy from https://github.com/Blankj/AndroidUtilCode
  * Create by dance, at 2019/4/1
  */
-class XPermission private constructor(private var context: Context?, vararg permissions: String?) {
+class XPermission private constructor(context: Context?, vararg permissions: String?) {
+    private var context: Context? = context?.applicationContext
     private var mOnRationaleListener: OnRationaleListener? = null
     private var mSimpleCallback: SimpleCallback? = null
     private var mFullCallback: FullCallback? = null
@@ -104,7 +104,7 @@ class XPermission private constructor(private var context: Context?, vararg perm
         )
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun startWriteSettingsActivity(activity: Activity, requestCode: Int) {
         val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
         intent.setData(Uri.parse("package:" + context!!.getPackageName()))
@@ -140,7 +140,7 @@ class XPermission private constructor(private var context: Context?, vararg perm
         )
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun startOverlayPermissionActivity(activity: Activity, requestCode: Int) {
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
         intent.setData(Uri.parse("package:" + context!!.getPackageName()))
@@ -465,7 +465,7 @@ class XPermission private constructor(private var context: Context?, vararg perm
             @PermissionConstants.PermissionGroup vararg permissions: String?
         ): XPermission? {
             val permission = instance ?: return XPermission(context, *permissions)
-            permission.context = context
+            permission.context = context?.applicationContext
             permission.prepare(*permissions)
             return permission
         }

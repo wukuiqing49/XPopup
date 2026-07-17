@@ -56,7 +56,7 @@ class PhotoViewAttacher(private val mImageView: ImageView) : OnTouchListener,
 
     // Gesture Detectors
     private val mGestureDetector: GestureDetector?
-    private val mScaleDragDetector: CustomGestureDetector?
+    private var mScaleDragDetector: CustomGestureDetector? = null
 
     // These are set so we don't keep allocating them on the heap
     private val mBaseMatrix = Matrix()
@@ -109,7 +109,7 @@ class PhotoViewAttacher(private val mImageView: ImageView) : OnTouchListener,
 
             val parent = mImageView.getParent()
             if (parent == null) return
-            if (mAllowParentInterceptOnEdge && !mScaleDragDetector.isScaling && !mBlockParentIntercept) {
+            if (mAllowParentInterceptOnEdge && mScaleDragDetector?.isScaling != true && !mBlockParentIntercept) {
                 if ((mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH && !isLongImage)
                     || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 0f && isHorizontal)
                     || (mHorizontalScrollEdge == HORIZONTAL_EDGE_RIGHT && dx <= -0f && isHorizontal) //                        || (mVerticalScrollEdge == VERTICAL_EDGE_TOP && dy >= 1f)
@@ -414,12 +414,13 @@ class PhotoViewAttacher(private val mImageView: ImageView) : OnTouchListener,
             }
 
             // Try the Scale/Drag detector
-            if (mScaleDragDetector != null) {
-                val wasScaling = mScaleDragDetector.isScaling
-                val wasDragging = mScaleDragDetector.isDragging
-                handled = mScaleDragDetector.onTouchEvent(ev)
-                val didntScale = !wasScaling && !mScaleDragDetector.isScaling
-                val didntDrag = !wasDragging && !mScaleDragDetector.isDragging
+            val scaleDragDetector = mScaleDragDetector
+            if (scaleDragDetector != null) {
+                val wasScaling = scaleDragDetector.isScaling
+                val wasDragging = scaleDragDetector.isDragging
+                handled = scaleDragDetector.onTouchEvent(ev)
+                val didntScale = !wasScaling && !scaleDragDetector.isScaling
+                val didntDrag = !wasDragging && !scaleDragDetector.isDragging
                 mBlockParentIntercept = didntScale && didntDrag
             }
             // Check to see if the user double tapped

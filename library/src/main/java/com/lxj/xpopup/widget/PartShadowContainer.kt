@@ -57,9 +57,10 @@ class PartShadowContainer : FrameLayout {
                 val dy = event.getY() - y
                 val distance = sqrt(dx * dx + dy * dy)
                 if (distance < ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
-                    if (notDismissArea != null && !notDismissArea!!.isEmpty()) {
+                    val excludedAreas = notDismissArea
+                    if (excludedAreas != null && !excludedAreas.isEmpty()) {
                         var inRect = false
-                        for (r in notDismissArea) {
+                        for (r in excludedAreas) {
                             if (XPopupUtils.isInRect(event.getRawX(), event.getRawY(), r)) {
                                 inRect = true
                                 break

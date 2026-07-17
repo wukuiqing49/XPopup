@@ -80,7 +80,7 @@ class LoadingView @JvmOverloads constructor(
         override fun run() {
             time++
             postInvalidate(0, 0, getMeasuredWidth(), getMeasuredHeight())
-            postDelayed(increaseTask, 80)
+            postDelayed(this, 80)
         }
     }
 

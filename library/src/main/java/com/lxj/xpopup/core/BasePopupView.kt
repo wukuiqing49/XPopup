@@ -72,7 +72,7 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
     private var preSoftMode = -1
     var hasMoveUp: Boolean = false
     protected var popupHandler: Handler = Handler(Looper.getMainLooper())
-    protected var lifecycleRegistry: LifecycleRegistry
+    protected lateinit var lifecycleRegistry: LifecycleRegistry
     private var backPressedCallback: OnBackPressedCallback? = null
     private var appliedSystemBarInsets: Insets = Insets.NONE
 
@@ -931,7 +931,7 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
             if (popupInfo!!.isViewMode) {
                 //需要从DecorView分发，并且要排除自己，否则死循环
                 val decorView = this.activity!!.getWindow().getDecorView() as ViewGroup
-                for (i in 0..<decorView.getChildCount()) {
+                for (i in 0 until decorView.getChildCount()) {
                     val view = decorView.getChildAt(i)
                     //自己和兄弟弹窗都不互相分发，否则死循环
                     if (view !is BasePopupView) view.dispatchTouchEvent(event)

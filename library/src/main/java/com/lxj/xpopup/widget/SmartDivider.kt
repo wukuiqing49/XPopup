@@ -95,7 +95,7 @@ class SmartDivider(context: Context, orientation: Int) : ItemDecoration() {
         }
 
         val childCount = parent.getChildCount()
-        for (i in 0..<childCount) {
+        for (i in 0 until childCount) {
             if (i == (childCount - 1)) break //最后一个不要
 
             val child = parent.getChildAt(i)
@@ -125,7 +125,7 @@ class SmartDivider(context: Context, orientation: Int) : ItemDecoration() {
         }
 
         val childCount = parent.getChildCount()
-        for (i in 0..<childCount) {
+        for (i in 0 until childCount) {
             if (i == (childCount - 1)) break //最后一个不要
 
             val child = parent.getChildAt(i)

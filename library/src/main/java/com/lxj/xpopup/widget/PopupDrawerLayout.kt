@@ -30,7 +30,7 @@ class PopupDrawerLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
     var status: LayoutStatus? = null
-    var dragHelper: ViewDragHelper
+    lateinit var dragHelper: ViewDragHelper
     var placeHolder: View? = null
     var mChild: View? = null
     var position: PopupPosition? = PopupPosition.Left
@@ -125,7 +125,7 @@ class PopupDrawerLayout @JvmOverloads constructor(
     }
 
     private fun canScroll(group: ViewGroup, x: Float, y: Float, direction: Int = 0): Boolean {
-        for (i in 0..<group.getChildCount()) {
+        for (i in 0 until group.getChildCount()) {
             val child = group.getChildAt(i)
             val location = IntArray(2)
             child.getLocationInWindow(location)
@@ -139,8 +139,6 @@ class PopupDrawerLayout @JvmOverloads constructor(
                     if (child is ViewPager) {
                         val pager = child
                         if (direction == 0) {
-                            val b =
-                                pager.canScrollHorizontally(-1) || pager.canScrollHorizontally(1)
                             return pager.canScrollHorizontally(-1) || pager.canScrollHorizontally(1)
                         }
                         return pager.canScrollHorizontally(direction)

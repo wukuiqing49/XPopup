@@ -1,6 +1,12 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.1-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
+
+### 3.1.1 Compatibility
+
+- Compiled with Kotlin 1.8.22 and Java 8 bytecode; Kotlin consumers need version 1.8 or newer.
+- Supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies.
+- JitPack: `com.github.wukuiqing49:XPopup:3.1.1`.
 
 国内Gitee镜像地址：https://gitee.com/lxj_gitee/XPopup
 
@@ -95,7 +101,7 @@ Gif录制的有些卡顿，真机预览效果更佳。扫描二维码下载Demo�
 
 [![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup)
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.1.0'
+implementation 'com.github.wukuiqing49:XPopup:3.1.1'
 ```
 jitpack 还要求在工程的依赖仓库中加入：
 ```groovy

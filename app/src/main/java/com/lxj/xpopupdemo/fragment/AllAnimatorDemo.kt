@@ -16,13 +16,13 @@ class AllAnimatorDemo : BaseFragment() {
     var spinner: Spinner? = null
     override val layoutId: Int = R.layout.fragment_all_animator_demo
 
-    var data: Array<PopupAnimation?> = emptyArray()
+    var data: Array<PopupAnimation> = emptyArray()
     override fun init(view: View) {
         spinner = view.findViewById<Spinner>(R.id.spinner)
 
-        data = PopupAnimation.entries.toTypedArray()
+        data = PopupAnimation.values()
         spinner!!.setAdapter(
-            ArrayAdapter<PopupAnimation?>(
+            ArrayAdapter<PopupAnimation>(
                 requireContext(),
                 android.R.layout.simple_list_item_1,
                 data

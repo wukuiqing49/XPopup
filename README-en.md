@@ -1,5 +1,5 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.1-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
 <a href="https://tracking.gitads.io/?repo=XPopup"><img src="https://images.gitads.io/XPopup" style="width: 80%;height:auto"/></a>
@@ -7,6 +7,13 @@
 ### You can click the Ad Image to buy me a coffee!!!
 
 ### English | [中文](https://github.com/wukuiqing49/XPopup/blob/master/README.md)
+
+### What's new in 3.1.1
+
+- Compiled with Kotlin 1.8.22 and Java 8 bytecode. Kotlin consumers need version 1.8 or newer.
+- Replaced the framework Exif implementation with AndroidX and avoid retaining Activity instances in XPermission.
+- The Library supports `minSdk 21`; its AndroidX dependencies require consuming projects to use `compileSdk 35+`.
+- Published through JitPack as `com.github.wukuiqing49:XPopup:3.1.1`.
 
 ### What's new in 3.1.0
 
@@ -66,10 +73,10 @@ dependencyResolutionManagement {
 
 Add the dependency：
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.1.0'
+implementation 'com.github.wukuiqing49:XPopup:3.1.1'
 ```
 
-Version 3.1.0 requires `compileSdk 36` and supports `minSdk 21`. AndroidX, Material,
+Version 3.1.1 supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies. AndroidX, Material,
 and RecyclerView dependencies are published transitively. Glide, EasyAdapter, and
 SubsamplingScaleImageView are not Library dependencies.
 

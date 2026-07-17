@@ -15,7 +15,7 @@ android {
         applicationId "com.lxj.xpopupdemo"
         minSdk 21
         targetSdk 36
-        versionCode 8
+        versionCode 9
         versionName xpopup_version
 //        ndk {
 //            // 设置支持的SO库架构
@@ -38,8 +38,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+        languageVersion = '1.8'
+        apiVersion = '1.8'
     }
 
     lint {
