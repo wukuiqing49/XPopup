@@ -56,6 +56,9 @@ abstract class DrawerPopupView(context: Context) : BasePopupView(context) {
     override val popupImplView: View
         get() = drawerContentContainer.getChildAt(0)
 
+    override val popupInsetTarget: View?
+        get() = drawerContentContainer.getChildAt(0)
+
     override val innerLayoutId: Int
         get() = R.layout._xpopup_drawer_popup_view
 

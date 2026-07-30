@@ -43,5 +43,5 @@ class PagerBottomPopup(context: Context) : BottomPopupView(context) {
     override val maxHeight: Int
 
 
-        get() = (XPopupUtils.getScreenHeight(getContext()) * .85f).toInt()
+        get() = (XPopupUtils.getAppHeight(getContext()) * .85f).toInt()
 }

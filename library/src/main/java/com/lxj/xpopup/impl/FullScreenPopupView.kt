@@ -34,6 +34,9 @@ open class FullScreenPopupView(context: Context) : BasePopupView(context) {
         fullPopupContainer.addView(contentView)
     }
 
+    override val popupInsetTarget: View?
+        get() = contentView
+
     override fun initPopupContent() {
         super.initPopupContent()
         if (fullPopupContainer.getChildCount() == 0) addInnerContent()

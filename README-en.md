@@ -1,5 +1,5 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.2-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.2.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
 <a href="https://tracking.gitads.io/?repo=XPopup"><img src="https://images.gitads.io/XPopup" style="width: 80%;height:auto"/></a>
@@ -20,10 +20,20 @@
 - Migrated all Java sources to Kotlin 1.8.22 and upgraded to AGP 8.13.2, Gradle 8.13, and JDK 17.
 - Upgraded `compileSdk` and `targetSdk` to 36 with Android 15/16 edge-to-edge support.
 - Added status bar, display cutout, gesture navigation, three-button navigation, and landscape side navigation handling.
+- The library still supports Android 5.0 (`minSdk 21`); Android 17 forward compatibility does not require consumers to use `compileSdk 37`.
 - Removed EasyAdapter, Glide, and SubsamplingScaleImageView from the Library module; image loading implementations now live in the Demo only.
 - Published through JitPack as `com.github.wukuiqing49:XPopup:3.1.0`.
 
 Powerful，material UI，elegant interaction general popup！can absolutely replace Dialog，PopupWindow，PopupMenu，BottomSheet，DrawerLayout，Spinner. With built-in many beautiful animation，you can custom your UI and logic！
+
+For a fullscreen or drawer popup whose background extends behind system bars while foreground content stays clear of status bars, cutouts, and navigation bars, enable safe-area insets explicitly:
+
+```kotlin
+XPopup.Builder(context)
+    .popupInsetMode(PopupInsetMode.SafeArea)
+```
+
+`PopupInsetMode.Auto` preserves legacy layout behavior, `SafeArea` applies foreground safe-area insets, and `EdgeToEdge` leaves inset handling entirely to the custom popup.
 
 ## Feature
 - support Androidx
@@ -73,7 +83,7 @@ dependencyResolutionManagement {
 
 Add the dependency：
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.1.2'
+implementation 'com.github.wukuiqing49:XPopup:3.2.0'
 ```
 
 Version 3.1.2 supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies. AndroidX, Material,

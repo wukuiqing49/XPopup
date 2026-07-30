@@ -10,6 +10,8 @@
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:colorBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 </resources>

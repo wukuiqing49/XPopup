@@ -15,7 +15,6 @@ import com.lxj.xpopup.util.XPopupUtils
 import com.lxj.xpopup.util.XPopupUtils.dp2px
 import com.lxj.xpopup.util.XPopupUtils.getAppHeight
 import com.lxj.xpopup.util.XPopupUtils.getAppWidth
-import com.lxj.xpopup.util.XPopupUtils.getScreenHeight
 import com.lxj.xpopup.util.XPopupUtils.isLayoutRtl
 import kotlin.math.max
 
@@ -135,7 +134,7 @@ abstract class AttachPopupView(context: Context) : BasePopupView(context) {
             val isTallerThanWindowHeight =
                 (popupInfo.touchPoint!!.y + popupContentView.getMeasuredHeight()) > maxY
             if (isTallerThanWindowHeight) {
-                isShowUp = popupInfo.touchPoint!!.y > getScreenHeight(getContext()) / 2f
+                isShowUp = popupInfo.touchPoint!!.y > getAppHeight(getContext()) / 2f
             } else {
                 isShowUp = false
             }
@@ -146,7 +145,7 @@ abstract class AttachPopupView(context: Context) : BasePopupView(context) {
             val maxHeight = (if (this@AttachPopupView.isShowUpToTarget)
                 (popupInfo.touchPoint!!.y - statusBarHeight - overflow)
             else
-                (getScreenHeight(getContext()) - popupInfo.touchPoint!!.y - overflow - realNavHeight)).toInt()
+                (getAppHeight(getContext()) - popupInfo.touchPoint!!.y - overflow - realNavHeight)).toInt()
             val maxWidth =
                 (if (isShowLeft) (getAppWidth(getContext()) - popupInfo.touchPoint!!.x - overflow) else (popupInfo.touchPoint!!.x - overflow)).toInt()
             if (popupContentView.getMeasuredHeight() > maxHeight) {
@@ -234,7 +233,7 @@ abstract class AttachPopupView(context: Context) : BasePopupView(context) {
             val maxHeight = if (this@AttachPopupView.isShowUpToTarget)
                 (rect.top - statusBarHeight - overflow)
             else
-                (getScreenHeight(getContext()) - rect.bottom - overflow - realNavHeight)
+                (getAppHeight(getContext()) - rect.bottom - overflow - realNavHeight)
             val maxWidth =
                 if (isShowLeft) (getAppWidth(getContext()) - rect.left - overflow) else (rect.right - overflow)
             if (popupContentView.getMeasuredHeight() > maxHeight) {

@@ -39,6 +39,7 @@ import com.lxj.xpopup.animator.ShadowBgAnimator
 import com.lxj.xpopup.animator.TranslateAlphaAnimator
 import com.lxj.xpopup.animator.TranslateAnimator
 import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.enums.PopupInsetMode
 import com.lxj.xpopup.enums.PopupStatus
 import com.lxj.xpopup.impl.FullScreenPopupView
 import com.lxj.xpopup.impl.PartShadowPopupView
@@ -75,6 +76,8 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
     protected lateinit var lifecycleRegistry: LifecycleRegistry
     private var backPressedCallback: OnBackPressedCallback? = null
     private var appliedSystemBarInsets: Insets = Insets.NONE
+    private var appliedInsetTarget: View? = null
+    private var insetTargetInitialPadding: Insets = Insets.NONE
 
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
@@ -244,9 +247,16 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
     }
 
     internal fun applySystemWindowInsets(insets: WindowInsetsCompat) {
-        val keepsImmersiveContent = this is FullScreenPopupView || this is DrawerPopupView
-        val hostIsEdgeToEdge = !popupInfo.isViewMode || Build.VERSION.SDK_INT >= 35
-        val systemInsets = if (keepsImmersiveContent || !hostIsEdgeToEdge) {
+        val shouldApplySafeArea = when (popupInfo.popupInsetMode) {
+            PopupInsetMode.SafeArea -> true
+            PopupInsetMode.EdgeToEdge -> false
+            PopupInsetMode.Auto -> {
+                val keepsImmersiveContent = this is FullScreenPopupView || this is DrawerPopupView
+                val hostIsEdgeToEdge = !popupInfo.isViewMode || Build.VERSION.SDK_INT >= 35
+                !keepsImmersiveContent && hostIsEdgeToEdge
+            }
+        }
+        val systemInsets = if (!shouldApplySafeArea) {
             Insets.NONE
         } else {
             val safeInsets = insets.getInsets(
@@ -259,15 +269,39 @@ abstract class BasePopupView(context: Context) : FrameLayout(context), DefaultLi
                 if (insets.isVisible(WindowInsetsCompat.Type.ime())) 0 else safeInsets.bottom
             )
         }
+        val target = popupInsetTarget ?: return
+        if (appliedInsetTarget !== target) {
+            appliedInsetTarget = target
+            insetTargetInitialPadding = Insets.of(
+                target.paddingLeft,
+                target.paddingTop,
+                target.paddingRight,
+                target.paddingBottom
+            )
+            appliedSystemBarInsets = Insets.NONE
+        }
         if (appliedSystemBarInsets == systemInsets) return
         appliedSystemBarInsets = systemInsets
-        setPadding(systemInsets.left, systemInsets.top, systemInsets.right, systemInsets.bottom)
-        requestLayout()
+        target.setPadding(
+            insetTargetInitialPadding.left + systemInsets.left,
+            insetTargetInitialPadding.top + systemInsets.top,
+            insetTargetInitialPadding.right + systemInsets.right,
+            insetTargetInitialPadding.bottom + systemInsets.bottom
+        )
+        target.requestLayout()
         post { doMeasure() }
     }
 
+    /**
+     * Foreground view that receives [PopupInsetMode.SafeArea] padding. The popup root remains
+     * edge-to-edge so backgrounds, shadows, touch handling, and animations keep full-window bounds.
+     */
+    protected open val popupInsetTarget: View?
+        get() = this
+
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
+        ViewCompat.requestApplyInsets(this)
         this.activityContentView.post(object : Runnable {
             override fun run() {
                 doMeasure()

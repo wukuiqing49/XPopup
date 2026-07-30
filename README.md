@@ -1,5 +1,5 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.1.2-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.2.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
 ### 3.1.2 Compatibility
@@ -18,6 +18,7 @@
 - 全部 Java 源码迁移为 Kotlin，使用 Kotlin 1.8.22、AGP 8.13.2、Gradle 8.13 和 JDK 17。
 - `compileSdk`、`targetSdk` 升级到 36，兼容 Android 15/16 强制 edge-to-edge。
 - 完成状态栏、刘海、手势导航、三键导航和横屏侧边导航适配。
+- Library 仍支持 Android 5.0（`minSdk 21`），Android 17 前向兼容不要求接入方使用 `compileSdk 37`。
 - Library 已移除 EasyAdapter、Glide 和 SubsamplingScaleImageView；图片加载实现仅保留在 Demo。
 - JitPack 坐标更新为 `com.github.wukuiqing49:XPopup:3.1.0`。
 - 内置几种了常用的弹窗，十几种良好的动画，将弹窗和动画的自定义设计的极其简单；目前还没有出现XPopup实现不了的弹窗效果。
@@ -32,6 +33,15 @@
 - 支持在应用后台弹出（需要申请悬浮窗权限，一行代码即可）
 - 支持androidx，完美支持RTL布局，完美支持横竖屏切换，支持小窗模式
 - **如果你想要时间选择器和城市选择器，可以使用XPopup扩展功能库XPopupExt： https://github.com/li-xiaojun/XPopupExt**
+
+全屏或 Drawer 弹窗需要背景延伸到系统栏、前景内容避开状态栏、刘海和导航栏时，可以显式启用安全区：
+
+```kotlin
+XPopup.Builder(context)
+    .popupInsetMode(PopupInsetMode.SafeArea)
+```
+
+`PopupInsetMode.Auto` 保持旧版本布局行为；`SafeArea` 自动处理前景内容安全区；`EdgeToEdge` 完全交给自定义弹窗处理 Insets。
 
 **设计思路**：
 综合常见的弹窗场景，我将其分为几类：
@@ -101,8 +111,9 @@ Gif录制的有些卡顿，真机预览效果更佳。扫描二维码下载Demo�
 
 [![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup)
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.1.2'
+implementation 'com.github.wukuiqing49:XPopup:3.2.0'
 ```
+
 jitpack 还要求在工程的依赖仓库中加入：
 ```groovy
 dependencyResolutionManagement {
@@ -124,6 +135,30 @@ android {
 
 Library 的 AndroidX、Material 和 RecyclerView 依赖会由 Maven 自动传递。Glide、EasyAdapter 和
 `subsampling-scale-image-view` 不再属于 Library 依赖，需要图片加载时由宿主应用自行选择实现。
+
+## 发布
+
+版本号继续使用根目录 `build.gradle` 中的 `ext.xpopup_version`，发布脚本会统一处理版本升级、构建验证、提交和 tag：
+
+```powershell
+.\scripts\release-xpopup.ps1 -Bump patch
+```
+
+`-Bump` 支持 `patch`、`minor` 和 `major`。也可以手动指定版本：
+
+```powershell
+.\scripts\release-xpopup.ps1 -Version 3.2.0
+```
+
+脚本会更新 `build.gradle`、README 版本徽章和依赖示例，执行 Library 单元测试、App/Library Lint、Debug APK、Release AAR 和 Maven Local 发布验证，然后创建 release commit 和同名 tag，默认原子推送 `master` 与 tag 到 `origin`。JitPack 使用该 tag 构建发布版本。
+
+```powershell
+# 只生成本地 commit/tag，不 push
+.\scripts\release-xpopup.ps1 -Bump minor -SkipPush
+
+# 将当前未提交改动一起纳入发版提交（不会提交 .vscode）
+.\scripts\release-xpopup.ps1 -Bump minor -AllowDirty
+```
 
 ## 使用文档
 

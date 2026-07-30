@@ -105,7 +105,7 @@ class ZhihuCommentPopup(context: Context) : BottomPopupView(context) {
     override val maxHeight: Int
 
 
-        get() = (XPopupUtils.getScreenHeight(getContext()) * .7f).toInt()
+        get() = (XPopupUtils.getAppHeight(getContext()) * .7f).toInt()
 
     override fun onBackPressed(): Boolean {
         Toast.makeText(getContext(), "拦截返回", Toast.LENGTH_SHORT).show()

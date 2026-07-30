@@ -6,9 +6,9 @@ import android.os.Build
 import android.view.View
 import android.widget.TextView
 import androidx.transition.ChangeBounds
+import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.google.android.material.transition.MaterialFade
 import com.lxj.xpopup.R
 import com.lxj.xpopup.core.CenterPopupView
 import com.lxj.xpopup.util.XPopupUtils
@@ -63,7 +63,7 @@ open class LoadingPopupView(context: Context, bindLayoutId: Int) : CenterPopupVi
                 if (!firstShow) {
                     val set = TransitionSet()
                         .setDuration(animationDuration.toLong())
-                        .addTransition(MaterialFade())
+                        .addTransition(Fade())
                         .addTransition(ChangeBounds())
                     TransitionManager.beginDelayedTransition(centerPopupContainer, set)
                 }

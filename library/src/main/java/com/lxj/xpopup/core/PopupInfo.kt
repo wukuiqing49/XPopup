@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.lxj.xpopup.animator.PopupAnimator
 import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.enums.PopupInsetMode
 import com.lxj.xpopup.enums.PopupPosition
 import com.lxj.xpopup.interfaces.XPopupCallback
 
@@ -55,6 +56,7 @@ class PopupInfo {
     var isDestroyOnDismiss: Boolean = false //是否关闭后进行资源释放
     var positionByWindowCenter: Boolean = false //是否已屏幕中心进行定位，默认根据Material范式进行定位
     var isViewMode: Boolean = false //是否是View实现，默认是Dialog实现
+    var popupInsetMode: PopupInsetMode = PopupInsetMode.Auto
     var keepScreenOn: Boolean = false //是否保持屏幕常亮
     var shadowBgColor: Int = 0 //阴影背景的颜色
     var animationDuration: Int = -1 //动画的时长

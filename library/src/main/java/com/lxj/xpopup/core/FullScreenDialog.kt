@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.insets.ColorProtection
+import androidx.core.view.insets.Protection
 import androidx.core.view.insets.ProtectionLayout
 import com.lxj.xpopup.R
 import com.lxj.xpopup.XPopup
@@ -68,23 +69,9 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
         }
         getWindow()!!.setBackgroundDrawable(null)
 
-        //remove status bar shadow
-        setWindowFlag(
-            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
-            false
-        )
-        getWindow()!!.setStatusBarColor(Color.TRANSPARENT)
         if (Build.VERSION.SDK_INT >= 29) {
-            getWindow()!!.isNavigationBarContrastEnforced = false
-        }
-        if (Build.VERSION.SDK_INT >= 28) {
-            getWindow()!!.navigationBarDividerColor = Color.TRANSPARENT
-        }
-        if (Build.VERSION.SDK_INT < 35) {
-            val navigationBarColor = this.navigationBarColor
-            getWindow()!!.setNavigationBarColor(
-                if (navigationBarColor == 0) Color.TRANSPARENT else navigationBarColor
-            )
+            getWindow()!!.isNavigationBarContrastEnforced =
+                contentView!!.popupInfo!!.hasNavigationBar && resolvedNavigationBarColor == 0
         }
         getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
@@ -107,15 +94,21 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
 
     private fun setPopupContentView() {
         val popupView = contentView ?: return
-        val barColor = navigationBarColor
-        if (Build.VERSION.SDK_INT >= 35 && barColor != 0) {
+        val protections = mutableListOf<Protection>()
+        val statusBarColor = resolvedStatusBarColor
+        if (statusBarColor != Color.TRANSPARENT) {
+            protections.add(ColorProtection(WindowInsetsCompat.Side.TOP, statusBarColor))
+        }
+        val navigationBarColor = resolvedNavigationBarColor
+        if (navigationBarColor != Color.TRANSPARENT) {
+            protections.add(ColorProtection(WindowInsetsCompat.Side.LEFT, navigationBarColor))
+            protections.add(ColorProtection(WindowInsetsCompat.Side.RIGHT, navigationBarColor))
+            protections.add(ColorProtection(WindowInsetsCompat.Side.BOTTOM, navigationBarColor))
+        }
+        if (protections.isNotEmpty()) {
             protectionLayout = ProtectionLayout(
                 getContext(),
-                listOf(
-                    ColorProtection(WindowInsetsCompat.Side.LEFT, barColor),
-                    ColorProtection(WindowInsetsCompat.Side.RIGHT, barColor),
-                    ColorProtection(WindowInsetsCompat.Side.BOTTOM, barColor)
-                )
+                protections
             )
             protectionLayout!!.addView(
                 popupView,
@@ -130,11 +123,20 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
         }
     }
 
-    private val navigationBarColor: Int
+    private val resolvedNavigationBarColor: Int
         get() = if (contentView!!.popupInfo!!.navigationBarColor == 0)
             XPopup.navigationBarColor
         else
             contentView!!.popupInfo!!.navigationBarColor
+
+    private val resolvedStatusBarColor: Int
+        get() {
+            val light = if (contentView!!.popupInfo!!.isLightStatusBar == 0)
+                XPopup.isLightStatusBar
+            else
+                contentView!!.popupInfo!!.isLightStatusBar
+            return if (light == 0) Color.TRANSPARENT else contentView!!.statusBarBgColor
+        }
 
     fun setWindowFlag(bits: Int, on: Boolean) {
         val winParams = getWindow()!!.getAttributes()
@@ -149,6 +151,7 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
     private fun setStatusBarLightMode() {
         val controller =
             WindowCompat.getInsetsController(getWindow()!!, getWindow()!!.getDecorView())
+        updateSystemBarBehavior(controller)
         if (!contentView!!.popupInfo!!.hasStatusBar) {
             controller.hide(WindowInsetsCompat.Type.statusBars())
             return
@@ -158,9 +161,6 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
             if (contentView!!.popupInfo!!.isLightStatusBar == 0) XPopup.isLightStatusBar else contentView!!.popupInfo!!.isLightStatusBar
         if (light != 0) {
             controller.setAppearanceLightStatusBars(light > 0)
-            if (Build.VERSION.SDK_INT < 35) {
-                getWindow()!!.setStatusBarColor(contentView!!.popupInfo!!.statusBarBgColor)
-            }
         } else {
             val hostWindow = hostActivity?.window
             if (hostWindow != null) {
@@ -185,6 +185,7 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
     fun setNavBarLightMode() {
         val controller =
             WindowCompat.getInsetsController(getWindow()!!, getWindow()!!.getDecorView())
+        updateSystemBarBehavior(controller)
         if (!contentView!!.popupInfo!!.hasNavigationBar) {
             hideNavigationBar()
         } else {
@@ -202,6 +203,13 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
                     hostWindow.decorView
                 ).isAppearanceLightNavigationBars
             }
+        }
+    }
+
+    private fun updateSystemBarBehavior(controller: WindowInsetsControllerCompat) {
+        if (!contentView!!.popupInfo!!.hasStatusBar || !contentView!!.popupInfo!!.hasNavigationBar) {
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 

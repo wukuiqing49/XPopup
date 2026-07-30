@@ -15,6 +15,7 @@ import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.AttachPopupView
 import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.enums.PopupInsetMode
 import com.lxj.xpopup.enums.PopupPosition
 import com.lxj.xpopup.impl.LoadingPopupView
 import com.lxj.xpopup.interfaces.OnConfirmListener
@@ -323,6 +324,7 @@ class QuickStartDemo : BaseFragment(), View.OnClickListener {
             popupView = CustomFullScreenPopup(requireContext())
             XPopup.Builder(requireContext())
                 .isLightStatusBar(true)
+                .popupInsetMode(PopupInsetMode.SafeArea)
                 .autoOpenSoftInput(true)
                 .asCustom(popupView!!)
                 .show()

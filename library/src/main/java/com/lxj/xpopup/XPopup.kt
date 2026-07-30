@@ -17,6 +17,7 @@ import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.core.ImageViewerPopupView
 import com.lxj.xpopup.core.PopupInfo
 import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.enums.PopupInsetMode
 import com.lxj.xpopup.enums.PopupPosition
 import com.lxj.xpopup.impl.AttachListPopupView
 import com.lxj.xpopup.impl.BottomListPopupView
@@ -618,6 +619,15 @@ object XPopup {
          */
         fun isViewMode(viewMode: Boolean): Builder {
             this.popupInfo.isViewMode = viewMode
+            return this
+        }
+
+        /**
+         * Controls whether popup foreground content avoids system bars and display cutouts.
+         * The popup window and background always remain edge-to-edge.
+         */
+        fun popupInsetMode(popupInsetMode: PopupInsetMode): Builder {
+            this.popupInfo.popupInsetMode = popupInsetMode
             return this
         }
 
