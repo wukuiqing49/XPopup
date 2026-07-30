@@ -57,6 +57,20 @@ function Replace-InFile([string]$path, [scriptblock]$replace) {
     }
 }
 
+function Assert-FileContains([string]$path, [string]$expected) {
+    $content = Get-Content -LiteralPath $path -Raw -Encoding UTF8
+    if (-not $content.Contains($expected)) {
+        throw "$path was not updated correctly. Missing: $expected"
+    }
+}
+
+function Assert-FileMatches([string]$path, [string]$pattern, [string]$description) {
+    $content = Get-Content -LiteralPath $path -Raw -Encoding UTF8
+    if (-not [regex]::IsMatch($content, $pattern)) {
+        throw "$path was not updated correctly. Missing: $description"
+    }
+}
+
 $currentVersion = Get-CurrentVersion
 if ([string]::IsNullOrWhiteSpace($Version)) {
     $Version = Get-NextVersion $currentVersion $Bump
@@ -105,14 +119,39 @@ Replace-InFile $versionFile {
     return $content -replace '(?m)^(ext\.xpopup_version\s*=\s*")[^"]+("\s*)$', "`${1}$Version`${2}"
 }
 
-foreach ($readme in @("README.md", "README-en.md")) {
-    Replace-InFile $readme {
-        param($content)
-        $content = $content -replace '(img\.shields\.io/badge/version-).*?(-brightgreen\.svg)', "`${1}$Version`${2}"
-        $content = $content -replace "(implementation 'com\.github\.wukuiqing49:XPopup:)[^']+(')", "`${1}$Version`${2}"
-        return $content
-    }
+Replace-InFile "README.md" {
+    param($content)
+    $content = $content -replace '(img\.shields\.io/badge/version-).*?(-brightgreen\.svg)', "`${1}$Version`${2}"
+    $content = $content -replace "(implementation 'com\.github\.wukuiqing49:XPopup:)[^']+(')", "`${1}$Version`${2}"
+    $content = $content -replace '(?m)^(### [^\d\r\n]+)\d+\.\d+\.\d+(\s*)$', "`${1}$Version`${2}"
+    $content = $content -replace '(?m)^(- JitPack[^`\r\n]{1,3}`com\.github\.wukuiqing49:XPopup:)[^`]+(`[^A-Za-z0-9\r\n]*\s*)$', "`${1}$Version`${2}"
+    return $content
 }
+
+Replace-InFile "README-en.md" {
+    param($content)
+    $content = $content -replace '(img\.shields\.io/badge/version-).*?(-brightgreen\.svg)', "`${1}$Version`${2}"
+    $content = $content -replace "(implementation 'com\.github\.wukuiqing49:XPopup:)[^']+(')", "`${1}$Version`${2}"
+    $content = $content -replace '(?m)^(### Current release: )\d+\.\d+\.\d+(\s*)$', "`${1}$Version`${2}"
+    $content = $content -replace '(?m)^(- JitPack: `com\.github\.wukuiqing49:XPopup:)[^`]+(`\.\s*)$', "`${1}$Version`${2}"
+    $content = $content -replace '(?m)^(Version )\d+\.\d+\.\d+( supports `minSdk)', "`${1}$Version`${2}"
+    return $content
+}
+
+Assert-FileContains $versionFile "ext.xpopup_version = `"$Version`""
+foreach ($readme in @("README.md", "README-en.md")) {
+    Assert-FileContains $readme "badge/version-$Version-brightgreen.svg"
+    Assert-FileContains $readme "implementation 'com.github.wukuiqing49:XPopup:$Version'"
+    Assert-FileContains $readme ".\scripts\release-xpopup.ps1 -Bump patch"
+    Assert-FileContains $readme ".\scripts\release-xpopup.ps1 -Bump minor -AllowDirty"
+    Assert-FileContains $readme "-SkipPush"
+}
+$escapedVersion = [regex]::Escape($Version)
+Assert-FileMatches "README.md" "(?m)^### [^\d\r\n]+$escapedVersion\s*$" "current release heading $Version"
+Assert-FileMatches "README.md" "(?m)^- JitPack[^\x60\r\n]{1,3}\x60com\.github\.wukuiqing49:XPopup:$escapedVersion\x60[^A-Za-z0-9\r\n]*\s*$" "current JitPack coordinate $Version"
+Assert-FileContains "README-en.md" "### Current release: $Version"
+Assert-FileMatches "README-en.md" "(?m)^- JitPack: \x60com\.github\.wukuiqing49:XPopup:$escapedVersion\x60\.\s*$" "current JitPack coordinate $Version"
+Assert-FileMatches "README-en.md" "(?m)^Version $escapedVersion supports \x60minSdk 21\x60" "current compatibility version $Version"
 
 $gradleArguments = @(
     "--no-daemon",

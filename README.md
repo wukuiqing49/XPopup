@@ -1,12 +1,12 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.2.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.3.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
-### 3.1.2 Compatibility
+### 当前版本：3.3.0
 
 - Build requires JDK 17. The published Android library targets Java 8 bytecode and is callable from Java 8+ and Kotlin 1.7.20+ projects.
 - Supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies.
-- JitPack: `com.github.wukuiqing49:XPopup:3.1.2`.
+- JitPack：`com.github.wukuiqing49:XPopup:3.3.0`。
 
 国内Gitee镜像地址：https://gitee.com/lxj_gitee/XPopup
 
@@ -111,7 +111,7 @@ Gif录制的有些卡顿，真机预览效果更佳。扫描二维码下载Demo�
 
 [![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup)
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.2.0'
+implementation 'com.github.wukuiqing49:XPopup:3.3.0'
 ```
 
 jitpack 还要求在工程的依赖仓库中加入：
@@ -140,6 +140,16 @@ Library 的 AndroidX、Material 和 RecyclerView 依赖会由 Maven 自动传递
 
 版本号继续使用根目录 `build.gradle` 中的 `ext.xpopup_version`，发布脚本会统一处理版本升级、构建验证、提交和 tag：
 
+当前工作区包含本次版本改动，需要自动升级 minor 版本并直接发布时，执行：
+
+```powershell
+.\scripts\release-xpopup.ps1 -Bump minor -AllowDirty
+```
+
+`-AllowDirty` 会将当前未提交改动一起纳入 release commit（排除 `.vscode`）；验证通过后会创建版本 tag，并默认将 `master` 和 tag 原子推送到 `origin`。
+
+工作区干净时，默认自动升级 patch 版本：
+
 ```powershell
 .\scripts\release-xpopup.ps1 -Bump patch
 ```
@@ -147,17 +157,16 @@ Library 的 AndroidX、Material 和 RecyclerView 依赖会由 Maven 自动传递
 `-Bump` 支持 `patch`、`minor` 和 `major`。也可以手动指定版本：
 
 ```powershell
-.\scripts\release-xpopup.ps1 -Version 3.2.0
+.\scripts\release-xpopup.ps1 -Version 3.2.1
 ```
 
-脚本会更新 `build.gradle`、README 版本徽章和依赖示例，执行 Library 单元测试、App/Library Lint、Debug APK、Release AAR 和 Maven Local 发布验证，然后创建 release commit 和同名 tag，默认原子推送 `master` 与 tag 到 `origin`。JitPack 使用该 tag 构建发布版本。
+脚本会更新 `build.gradle`，并同步更新中英文 README 的当前版本、JitPack 坐标、版本徽章和依赖示例。README 未正确更新时脚本会停止发布。验证通过后，脚本创建 release commit 和同名 tag，默认原子推送 `master` 与 tag 到 `origin`，JitPack 使用该 tag 构建发布版本。
+
+发布前自动执行 Library 单元测试、App/Library Lint、Debug APK、Release AAR 和 Maven Local 发布验证。
 
 ```powershell
 # 只生成本地 commit/tag，不 push
 .\scripts\release-xpopup.ps1 -Bump minor -SkipPush
-
-# 将当前未提交改动一起纳入发版提交（不会提交 .vscode）
-.\scripts\release-xpopup.ps1 -Bump minor -AllowDirty
 ```
 
 ## 使用文档

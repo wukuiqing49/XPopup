@@ -6,7 +6,7 @@ plugins {
     id 'org.jetbrains.kotlin.android' version '1.8.22' apply false
 }
 
-ext.xpopup_version = "3.2.0"
+ext.xpopup_version = "3.3.0"
 
 tasks.register('clean', Delete) {
     delete rootProject.layout.buildDirectory

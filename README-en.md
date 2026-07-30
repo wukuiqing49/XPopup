@@ -1,5 +1,5 @@
 ## XPopup
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.2.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.3.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 ![](screenshot/logo.png)
 
 <a href="https://tracking.gitads.io/?repo=XPopup"><img src="https://images.gitads.io/XPopup" style="width: 80%;height:auto"/></a>
@@ -7,6 +7,12 @@
 ### You can click the Ad Image to buy me a coffee!!!
 
 ### English | [中文](https://github.com/wukuiqing49/XPopup/blob/master/README.md)
+
+### Current release: 3.3.0
+
+- Build requires JDK 17. Published bytecode remains compatible with Java 8 and Kotlin 1.7.20+ consumers.
+- Supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies.
+- JitPack: `com.github.wukuiqing49:XPopup:3.3.0`.
 
 ### What's new in 3.1.2
 
@@ -83,12 +89,43 @@ dependencyResolutionManagement {
 
 Add the dependency：
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.2.0'
+implementation 'com.github.wukuiqing49:XPopup:3.3.0'
 ```
 
-Version 3.1.2 supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies. AndroidX, Material,
+Version 3.3.0 supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies. AndroidX, Material,
 and RecyclerView dependencies are published transitively. Glide, EasyAdapter, and
 SubsamplingScaleImageView are not Library dependencies.
+
+## Release automation
+
+The version remains defined by `ext.xpopup_version` in the root `build.gradle`. Use the release script to update the version, verify the build, create the release commit and tag, and push them atomically:
+
+To include the current working-tree changes, bump the minor version, and publish automatically, run:
+
+```powershell
+.\scripts\release-xpopup.ps1 -Bump minor -AllowDirty
+```
+
+`-AllowDirty` includes all current uncommitted changes in the release commit except `.vscode`. After verification, the script creates the version tag and atomically pushes `master` and the tag to `origin` by default.
+
+For a clean working tree, the default command bumps the patch version:
+
+```powershell
+.\scripts\release-xpopup.ps1 -Bump patch
+```
+
+`-Bump` accepts `patch`, `minor`, or `major`. A version can also be specified explicitly:
+
+```powershell
+.\scripts\release-xpopup.ps1 -Version 3.2.1
+```
+
+The script updates both README files, and stops before release if their current version, JitPack coordinate, badge, dependency example, or automation instructions are not synchronized. It then runs Library unit tests, App/Library Lint, the Debug APK build, the Release AAR build, and Maven Local publication verification.
+
+```powershell
+# Create the local commit and tag without pushing
+.\scripts\release-xpopup.ps1 -Bump patch -SkipPush
+```
 
 
 ## WIKI
