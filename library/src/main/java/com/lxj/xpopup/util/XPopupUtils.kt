@@ -7,7 +7,6 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.content.res.Resources.NotFoundException
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -24,7 +23,6 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.provider.Settings
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
@@ -126,9 +124,8 @@ object XPopupUtils {
                 return windowInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars()).top
             }
         }
-        val resources = Resources.getSystem()
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        return if (resourceId == 0) 0 else resources.getDimensionPixelSize(resourceId)
+        // Insets are window-specific and can change during multi-window or navigation-mode changes.
+        return 0
     }
 
     /**
@@ -146,9 +143,7 @@ object XPopupUtils {
                 return max(bars.bottom, max(bars.left, bars.right))
             }
         }
-        val res = Resources.getSystem()
-        val resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android")
-        return if (resourceId == 0) 0 else res.getDimensionPixelSize(resourceId)
+        return 0
     }
 
     @JvmStatic
@@ -376,51 +371,15 @@ object XPopupUtils {
     @JvmStatic
     fun isNavBarVisible(window: Window?): Boolean {
         if (window == null) return false
-        var isVisible = false
-        val decorView = window.getDecorView() as ViewGroup
-        if (decorView == null) return false
-        var i = 0
-        val count = decorView.getChildCount()
-        while (i < count) {
-            val child = decorView.getChildAt(i)
-            val id = child.getId()
-            if (id != View.NO_ID && (id ushr 24) != 0) {
-                try {
-                    val resourceEntryName =
-                        window.getContext().getResources().getResourceEntryName(id)
-                    if ("navigationBarBackground" == resourceEntryName
-                        && child.getVisibility() == View.VISIBLE
-                    ) {
-                        isVisible = true
-                        break
-                    }
-                } catch (e: NotFoundException) {
-                    break
-                }
-            }
-            i++
+        val decor = window.decorView
+        val rootInsets = ViewCompat.getRootWindowInsets(decor)
+        if (rootInsets != null) {
+            return rootInsets.isVisible(WindowInsetsCompat.Type.navigationBars())
         }
-        if (isVisible) {
+        return false
             // 对于三星手机，android10以下非OneUI2的版本，比如 s8，note8 等设备上，
             // 导航栏显示存在bug："当用户隐藏导航栏时显示输入法的时候导航栏会跟随显示"，会导致隐藏输入法之后判断错误
             // 这个问题在 OneUI 2 & android 10 版本已修复
-            if (FuckRomUtils.isSamsung
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
-            ) {
-                try {
-                    return Settings.Global.getInt(
-                        window.getContext().getContentResolver(),
-                        "navigationbar_hide_bar_enabled"
-                    ) == 0
-                } catch (ignore: Exception) {
-                }
-            }
-
-            val visibility = decorView.getSystemUiVisibility()
-            isVisible = (visibility and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0
-        }
-
-        return isVisible
     }
 
     @JvmStatic

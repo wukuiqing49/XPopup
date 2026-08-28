@@ -110,6 +110,7 @@ abstract class DrawerPopupView(context: Context) : BasePopupView(context) {
     var argbEvaluator: ArgbEvaluator = ArgbEvaluator()
     var currColor: Int = Color.TRANSPARENT
     var defaultColor: Int = Color.TRANSPARENT
+    private var statusBarAnimator: ValueAnimator? = null
 
     init {
         drawerLayout = findViewById<PopupDrawerLayout>(R.id.drawerLayout)
@@ -136,6 +137,7 @@ abstract class DrawerPopupView(context: Context) : BasePopupView(context) {
     fun doStatusBarColorTransform(isShow: Boolean) {
         if (popupInfo != null && popupInfo!!.hasStatusBarShadow) {
             //状态栏渐变动画
+            statusBarAnimator?.cancel()
             val animator = ValueAnimator.ofObject(
                 argbEvaluator,
                 if (isShow) Color.TRANSPARENT else statusBarBgColor,
@@ -147,6 +149,7 @@ abstract class DrawerPopupView(context: Context) : BasePopupView(context) {
                     postInvalidate()
                 }
             })
+            statusBarAnimator = animator
             animator.setDuration(animationDuration.toLong()).start()
         }
     }
@@ -178,4 +181,10 @@ abstract class DrawerPopupView(context: Context) : BasePopupView(context) {
 
     override val popupAnimator: PopupAnimator?
         get() = null
+
+    override fun onDetachedFromWindow() {
+        statusBarAnimator?.cancel()
+        statusBarAnimator = null
+        super.onDetachedFromWindow()
+    }
 }

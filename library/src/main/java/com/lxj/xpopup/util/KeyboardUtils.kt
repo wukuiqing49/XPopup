@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.view.OnApplyWindowInsetsListener
@@ -45,10 +44,6 @@ class KeyboardUtils private constructor() {
             listener: OnSoftInputChangedListener
         ) {
             if (popupView == null) return
-            val flags = window.getAttributes().flags
-            if ((flags and WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS) != 0) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            }
             val decorViewInvisibleHeightPre = intArrayOf(getDecorViewInvisibleHeight(window))
             ViewCompat.setOnApplyWindowInsetsListener(
                 popupView,

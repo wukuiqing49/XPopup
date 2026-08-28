@@ -1,12 +1,12 @@
 ## XPopup
 
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.3.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.3.1-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 
 ![](screenshot/logo.png)
 
-### 当前版本：3.3.0
+### 当前版本：3.3.1
 
-- JitPack：`com.github.wukuiqing49:XPopup:3.3.0`。
+- JitPack：`com.github.wukuiqing49:XPopup:3.3.1`。
 - Library 使用 `compileSdk 36`，支持 Android 5.0 及以上系统（`minSdk 21`）。
 - AndroidX 依赖要求接入项目使用 `compileSdk 35+`。
 - 构建需要 JDK 17；发布产物保持 Java 8 字节码和 Kotlin 1.7.20+ 兼容性。
@@ -30,7 +30,7 @@ dependencyResolutionManagement {
 加入 XPopup：
 
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.3.0'
+implementation 'com.github.wukuiqing49:XPopup:3.3.1'
 ```
 
 Library 的 AndroidX、Material 和 RecyclerView 依赖会由 Maven 自动传递。Glide、EasyAdapter 和 `subsampling-scale-image-view` 不属于 Library 依赖，图片加载由宿主应用自行实现。
@@ -103,6 +103,12 @@ Demo 使用 `targetSdk 36`，覆盖 Android 15/16 强制 edge-to-edge、状态�
 - [自定义动画](https://github.com/li-xiaojun/XPopup/wiki/4.-%E5%A6%82%E4%BD%95%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A8%E7%94%BB)
 - [常用设置](https://github.com/li-xiaojun/XPopup/wiki/5.-%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE)
 - [常见问题](https://github.com/li-xiaojun/XPopup/wiki/6.-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98(%E5%BF%85%E7%9C%8B))
+
+## Android 15/16 Migration
+
+XPopup 3.3.1 uses `WindowInsetsCompat` and `WindowInsetsControllerCompat` for edge-to-edge behavior. `Auto` preserves immersive FullScreen and Drawer content and protects non-immersive foreground content when the host is forced edge-to-edge. `SafeArea` always protects the foreground; `EdgeToEdge` leaves all inset handling to custom popup code. IME movement remains separate from safe-area padding.
+
+`XPopup.statusBarBgColor`, `XPopup.navigationBarColor`, and the matching Builder methods remain source and binary compatible. The Builder color methods are deprecated for new code. Existing values are drawn by popup-owned protection or scrim content behind transparent system bars. New code should draw the desired color in its popup background or custom scrim.
 
 ## License
 

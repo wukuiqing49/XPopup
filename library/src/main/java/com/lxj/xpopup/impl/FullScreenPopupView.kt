@@ -47,6 +47,7 @@ open class FullScreenPopupView(context: Context) : BasePopupView(context) {
     private val paint = Paint()
     protected var shadowRect: Rect? = null
     var currColor: Int = Color.TRANSPARENT
+    private var statusBarAnimator: ValueAnimator? = null
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
         if (popupInfo != null && popupInfo.hasStatusBarShadow) {
@@ -69,6 +70,7 @@ open class FullScreenPopupView(context: Context) : BasePopupView(context) {
     private fun doStatusBarColorTransform(isShow: Boolean) {
         if (popupInfo != null && popupInfo.hasStatusBarShadow) {
             //状态栏渐变动画
+            statusBarAnimator?.cancel()
             val animator = ValueAnimator.ofObject(
                 argbEvaluator,
                 if (isShow) Color.TRANSPARENT else statusBarBgColor,
@@ -80,6 +82,7 @@ open class FullScreenPopupView(context: Context) : BasePopupView(context) {
                     postInvalidate()
                 }
             })
+            statusBarAnimator = animator
             animator.setDuration(animationDuration.toLong()).start()
         }
     }
@@ -103,6 +106,8 @@ open class FullScreenPopupView(context: Context) : BasePopupView(context) {
         }
 
     override fun onDetachedFromWindow() {
+        statusBarAnimator?.cancel()
+        statusBarAnimator = null
         if (popupInfo != null && translateAnimator != null) {
             popupContentView.setTranslationX(translateAnimator!!.startTranslationX)
             popupContentView.setTranslationY(translateAnimator!!.startTranslationY)

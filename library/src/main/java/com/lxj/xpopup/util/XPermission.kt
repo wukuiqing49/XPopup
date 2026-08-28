@@ -329,8 +329,7 @@ class XPermission private constructor(context: Context?, vararg permissions: Str
         override fun onCreate(savedInstanceState: Bundle?) {
             getWindow().addFlags(
                 (WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                        or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                        or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                        or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH)
             )
             getWindow().getAttributes().alpha = 0f
             val byteExtra = getIntent().getIntExtra(TYPE, TYPE_RUNTIME)

@@ -1,12 +1,12 @@
 ## XPopup
 
-[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.3.0-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
+[![](https://jitpack.io/v/wukuiqing49/XPopup.svg)](https://jitpack.io/#wukuiqing49/XPopup) ![](https://img.shields.io/badge/platform-android-blue.svg) ![](https://img.shields.io/badge/version-3.3.1-brightgreen.svg) ![](https://img.shields.io/badge/compileSdk-36-blue.svg) ![](https://img.shields.io/badge/minSdk-21-blue.svg) ![](https://img.shields.io/hexpm/l/plug.svg)
 
 ![](screenshot/logo.png)
 
-### Current release: 3.3.0
+### Current release: 3.3.1
 
-- JitPack: `com.github.wukuiqing49:XPopup:3.3.0`.
+- JitPack: `com.github.wukuiqing49:XPopup:3.3.1`.
 - The Library uses `compileSdk 36` and supports Android 5.0+ (`minSdk 21`).
 - AndroidX dependencies require consuming projects to use `compileSdk 35+`.
 - Builds require JDK 17; published artifacts remain compatible with Java 8 bytecode and Kotlin 1.7.20+ consumers.
@@ -30,10 +30,10 @@ dependencyResolutionManagement {
 Add XPopup:
 
 ```groovy
-implementation 'com.github.wukuiqing49:XPopup:3.3.0'
+implementation 'com.github.wukuiqing49:XPopup:3.3.1'
 ```
 
-Version 3.3.0 supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies. AndroidX, Material, and RecyclerView dependencies are published transitively. Glide, EasyAdapter, and SubsamplingScaleImageView are not Library dependencies; image loading remains the host application's responsibility.
+Version 3.3.1 supports `minSdk 21`; consuming projects need `compileSdk 35+` because of AndroidX dependencies. AndroidX, Material, and RecyclerView dependencies are published transitively. Glide, EasyAdapter, and SubsamplingScaleImageView are not Library dependencies; image loading remains the host application's responsibility.
 
 ## Quick Start
 
@@ -67,6 +67,10 @@ XPopup.Builder(context)
 - `PopupInsetMode.Auto` preserves legacy layout behavior.
 - `PopupInsetMode.SafeArea` keeps the background edge-to-edge and applies safe-area insets to foreground content.
 - `PopupInsetMode.EdgeToEdge` leaves inset handling to the custom popup.
+
+On Android 15/16, XPopup uses `WindowInsetsCompat` and `WindowInsetsControllerCompat`; it does not mutate platform status-bar or navigation-bar colors. `Auto` preserves immersive FullScreen and Drawer content, while non-immersive popup foreground is protected when the host is forced edge-to-edge. `SafeArea` always protects foreground content and `EdgeToEdge` leaves all insets to custom popup code. IME movement remains separate from safe-area padding.
+
+`XPopup.statusBarBgColor`, `XPopup.navigationBarColor`, and the matching Builder methods remain source and binary compatible. The Builder color methods are deprecated for new code. Existing values are rendered by XPopup behind transparent system bars using popup-owned protection or scrim views. New code should draw the desired color in its popup background or custom scrim.
 
 The Demo targets API 36 and covers Android 15/16 edge-to-edge enforcement, status bars, display cutouts, gesture and three-button navigation, landscape side navigation, and IME scenarios. The Library continues to support `minSdk 21`.
 

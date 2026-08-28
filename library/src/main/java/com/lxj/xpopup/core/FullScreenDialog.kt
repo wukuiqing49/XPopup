@@ -70,10 +70,8 @@ class FullScreenDialog(context: Context) : Dialog(context, R.style._XPopup_Trans
         getWindow()!!.setBackgroundDrawable(null)
 
         if (Build.VERSION.SDK_INT >= 29) {
-            getWindow()!!.isNavigationBarContrastEnforced =
-                contentView!!.popupInfo!!.hasNavigationBar && resolvedNavigationBarColor == 0
+            getWindow()!!.isNavigationBarContrastEnforced = false
         }
-        getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
         if (!contentView!!.popupInfo!!.isRequestFocus) { //不获取焦点
             var flag = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE

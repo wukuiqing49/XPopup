@@ -404,6 +404,10 @@ object XPopup {
          * @param navigationBarColor
          * @return
          */
+        @Deprecated(
+            message = "The color is drawn by XPopup behind navigation bars; prefer the popup background or scrim for new code.",
+            level = DeprecationLevel.WARNING
+        )
         fun navigationBarColor(navigationBarColor: Int): Builder {
             this.popupInfo.navigationBarColor = navigationBarColor
             return this
@@ -437,6 +441,10 @@ object XPopup {
          * @param statusBarBgColor
          * @return
          */
+        @Deprecated(
+            message = "The color is drawn by XPopup behind the status bar; prefer the popup background or scrim for new code.",
+            level = DeprecationLevel.WARNING
+        )
         fun statusBarBgColor(statusBarBgColor: Int): Builder {
             this.popupInfo.statusBarBgColor = statusBarBgColor
             return this
